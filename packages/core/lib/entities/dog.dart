@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:core/entities/entities.dart';
 import 'package:equatable/equatable.dart';
 
@@ -25,6 +27,7 @@ class Dog extends Equatable {
   final bool isNeutered;
   final List<DogInterest> interests;
   final List<DogTemperament> temperament;
+  final Location location;
 
   @override
   List<Object?> get props => [
