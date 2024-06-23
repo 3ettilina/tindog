@@ -17,7 +17,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'dog_interest_dto.g.dart';
+part 'dog_temperament_dto.g.dart';
 
 @JsonSerializable()
 class DogTemperamentDto extends Equatable {

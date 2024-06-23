@@ -1,5 +1,3 @@
-import 'package:location/location.dart';
-
 abstract class DogDataSource {
   // breed
   // age
@@ -13,12 +11,20 @@ abstract class DogDataSource {
   // if the image sent is not from a dog, the response will
   // contain a "isDog" false, and a "message" to show the user
   Future<Map<String, dynamic>> analyzeDog({
-   required String image,
+    required String image,
   });
 
   /// After setting all the onboarding info
   /// update the doc ID for that dog with all the info
-  Future<void> setDog({});
+  Future<void> setDog({
+    required String id,
+    required String name,
+    required int age,
+    required String breed,
+    required String gender,
+    required List<String> interests,
+    required String description,
+  });
 
   Future<List<Map<String, dynamic>>> fetchDogs({
     required String location,
@@ -38,12 +44,12 @@ abstract class DogDataSource {
   /// When a match happens, send both dog ids,
   /// backend creates a new chat for them.
   Future<Map<String, dynamic>> didMatch({
-  required String dogId1,
-required String dogId2,
-});
+    required String dogId1,
+    required String dogId2,
+  });
 
   /// chats collection fetch by the ID of the User
-/// owner of the dog
+  /// owner of the dog
   Future<Map<String, dynamic>> fetchChats({
     required String userId,
   });

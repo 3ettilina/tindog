@@ -8,6 +8,8 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
+  app_ui:
+    path: packages/app_ui
   core:
     path: packages/core
   flutter:

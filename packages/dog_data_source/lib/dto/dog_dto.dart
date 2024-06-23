@@ -20,7 +20,7 @@ class DogDto extends Equatable {
     required this.bio,
   });
 
-  factory DogDto.fromJson(Map<String, dynamic> json) => _$DogDtoFromJson(this);
+  factory DogDto.fromJson(Map<String, dynamic> json) => _$DogDtoFromJson(json);
 
   Object toJson() => _$DogDtoToJson(this);
 

@@ -15,6 +15,7 @@ class Dog extends Equatable {
     required this.isNeutered,
     required this.interests,
     required this.temperament,
+    required this.location,
   });
 
   final String id;

@@ -22,6 +22,7 @@ DogDto _$DogDtoFromJson(Map<String, dynamic> json) => DogDto(
       temperament: (json['temperament'] as List<dynamic>)
           .map((e) => DogTemperamentDto.fromJson(e as Map<String, dynamic>))
           .toList(),
+      bio: json['bio'] as String,
     );
 
 Map<String, dynamic> _$DogDtoToJson(DogDto instance) => <String, dynamic>{
@@ -35,4 +36,5 @@ Map<String, dynamic> _$DogDtoToJson(DogDto instance) => <String, dynamic>{
       'isNeutered': instance.isNeutered,
       'interests': instance.interests,
       'temperament': instance.temperament,
+      'bio': instance.bio,
     };
