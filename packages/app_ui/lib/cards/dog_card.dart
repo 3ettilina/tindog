@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 
 class DogCard extends StatelessWidget {
-  const DogCard({super.key});
+  const DogCard({
+    required this.dogImage,
+    super.key,
+  });
+
+  final ImageProvider dogImage;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Card(
+      elevation: 3,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          image: DecorationImage(
+            image: dogImage,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
   }
 }

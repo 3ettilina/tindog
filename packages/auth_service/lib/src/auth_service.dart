@@ -6,9 +6,11 @@ part 'firebase_auth_service.dart';
 /// Authentication Service Contract
 /// {@endtemplate}
 abstract class AuthService {
+  Future<String?> currentUser();
+
   /// Implements Sign In using Google SSO
-  Future<bool> googleSignIn();
+  Future<String?> googleSignIn();
 
   /// Implements Sign In using Apple SSO
-  Future<bool> appleSignIn();
+  Future<String?> appleSignIn();
 }
