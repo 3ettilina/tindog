@@ -1,6 +1,7 @@
 name: auth_repository
 description: A sample command-line application.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
@@ -8,7 +9,8 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  auth_service:
+    path: ../auth_service
 
 dev_dependencies:
   lints: ^3.0.0

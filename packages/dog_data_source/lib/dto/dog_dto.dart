@@ -17,9 +17,10 @@ class DogDto extends Equatable {
     required this.isNeutered,
     required this.interests,
     required this.temperament,
+    required this.bio,
   });
 
-  factory DogDto.fromJson(Map<String, dynamic> json) => _$DogDtoFromJson(this);
+  factory DogDto.fromJson(Map<String, dynamic> json) => _$DogDtoFromJson(json);
 
   Object toJson() => _$DogDtoToJson(this);
 
@@ -33,6 +34,7 @@ class DogDto extends Equatable {
   final bool isNeutered;
   final List<DogInterestDto> interests;
   final List<DogTemperamentDto> temperament;
+  final String bio;
 
   @override
   List<Object?> get props => [
