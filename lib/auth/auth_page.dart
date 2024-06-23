@@ -1,5 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:tindog/app/extensions/build_context_extensions.dart';
+import 'package:tindog/auth/bloc/auth_bloc.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -34,25 +36,8 @@ class AuthPage extends StatelessWidget {
               style: context.textTheme.titleMedium,
             ),
             Assets.images.arrowDownDouble.image(height: 80),
-            FilledButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Assets.icons.googleLight.svg(
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Sign In with Google',
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.theme.canvasColor,
-                    ),
-                  )
-                ],
-              ),
+            AppSignInButton.google(
+              onPressed: () => context.authBloc.add(LogIn()),
             )
           ],
         ),

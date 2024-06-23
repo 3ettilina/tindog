@@ -238,6 +238,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_card_swiper:
+    dependency: "direct main"
+    description:
+      name: flutter_card_swiper
+      sha256: "880ad669017154d6d1f8c3abd861db08af97b3b7b0f7d7d5cbde690a9253811d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.1"
   flutter_gen_core:
     dependency: transitive
     description:

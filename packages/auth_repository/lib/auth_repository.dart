@@ -1,5 +1,7 @@
 import 'package:auth_service/auth_service.dart';
 
+export 'package:auth_repository/auth_repository.dart';
+
 class AuthRepository {
   AuthRepository({
     AuthService? authService,
@@ -7,7 +9,15 @@ class AuthRepository {
 
   final AuthService _authService;
 
-  Future<bool> signInWithGoogle() async {
+  Future<String?> currentUser() async {
+    return _authService.currentUser();
+  }
+
+  Future<String?> signInWithGoogle() async {
     return _authService.googleSignIn();
+  }
+
+  Future<String?> signInWithApple() async {
+    return _authService.appleSignIn();
   }
 }

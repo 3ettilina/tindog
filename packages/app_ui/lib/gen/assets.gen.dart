@@ -34,6 +34,10 @@ class $AssetsAnimationsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/apple_light.svg
+  SvgGenImage get appleLight =>
+      const SvgGenImage('assets/icons/apple_light.svg');
+
   /// File path: assets/icons/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
@@ -57,7 +61,8 @@ class $AssetsIconsGen {
   String get path => 'assets/icons';
 
   /// List of all assets
-  List<SvgGenImage> get values => [chat, dog, google, googleLight, paw, send];
+  List<SvgGenImage> get values =>
+      [appleLight, chat, dog, google, googleLight, paw, send];
 }
 
 class $AssetsImagesGen {
@@ -75,6 +80,15 @@ class $AssetsImagesGen {
   AssetGenImage get arrowDownSmall =>
       const AssetGenImage('assets/images/arrow_down_small.gif');
 
+  /// File path: assets/images/like.png
+  AssetGenImage get like => const AssetGenImage('assets/images/like.png');
+
+  /// File path: assets/images/nope.png
+  AssetGenImage get nope => const AssetGenImage('assets/images/nope.png');
+
+  /// File path: assets/images/toro.jpeg
+  AssetGenImage get toro => const AssetGenImage('assets/images/toro.jpeg');
+
   /// File path: assets/images/welcome_header.png
   AssetGenImage get welcomeHeader =>
       const AssetGenImage('assets/images/welcome_header.png');
@@ -83,8 +97,15 @@ class $AssetsImagesGen {
   String get path => 'assets/images';
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [arrowDown, arrowDownDouble, arrowDownSmall, welcomeHeader];
+  List<AssetGenImage> get values => [
+        arrowDown,
+        arrowDownDouble,
+        arrowDownSmall,
+        like,
+        nope,
+        toro,
+        welcomeHeader
+      ];
 }
 
 class Assets {

@@ -8,17 +8,27 @@ class FirebaseAuthService implements AuthService {
   final FirebaseAuth _auth;
 
   @override
-  Future<bool> appleSignIn() {
-    throw UnimplementedError();
+  Future<String?> appleSignIn() async {
+    try {
+      final auth = await _auth.signInWithProvider(AppleAuthProvider());
+      return auth.user?.email;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<bool> googleSignIn() async {
+  Future<String?> googleSignIn() async {
     try {
-      await _auth.signInWithProvider(GoogleAuthProvider());
-      return true;
+      final auth = await _auth.signInWithProvider(GoogleAuthProvider());
+      return auth.user?.uid;
     } catch (e) {
-      return false;
+      return null;
     }
+  }
+
+  @override
+  Future<String?> currentUser() async {
+    return _auth.currentUser?.uid;
   }
 }
