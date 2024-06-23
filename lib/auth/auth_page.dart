@@ -33,7 +33,7 @@ class AuthPage extends StatelessWidget {
               'Sign in and start the adventure! 🐾',
               style: context.textTheme.titleMedium,
             ),
-            Assets.images.arrowDownDouble.image(width: 100),
+            Assets.images.arrowDownDouble.image(height: 80),
             FilledButton(
               onPressed: () {},
               child: Row(
