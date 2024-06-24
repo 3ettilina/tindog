@@ -7,6 +7,9 @@ import 'package:tindog/chats/chats_page.dart';
 import 'package:tindog/chats/details/chat_details_page.dart';
 import 'package:tindog/discover/details/dog_details_page.dart';
 import 'package:tindog/discover/discover_page.dart';
+import 'package:tindog/onboarding/onboarding_page.dart';
+import 'package:tindog/onboarding/view/onboarding_dog_details.dart';
+import 'package:tindog/onboarding/view/onboarding_dog_image.dart';
 import 'package:tindog/profile/profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -30,6 +33,28 @@ final routes = GoRouter(
       path: '/login',
       builder: (context, state) => const AuthPage(),
     ),
+    GoRoute(
+      name: 'onboarding',
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingPage(),
+      routes: [
+        GoRoute(
+          name: 'dogImage',
+          path: 'dogImage',
+          builder: (context, state) => const OnboardingDogImage(),
+        ),
+        GoRoute(
+          name: 'dogDetails',
+          path: 'dogDetails',
+          builder: (context, state) => const OnboardingDogDetails(),
+        ),
+        GoRoute(
+          name: 'location',
+          path: 'location',
+          builder: (context, state) => const OnboardingDogDetails(),
+        )
+      ],
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return HomePage(navigationShell: navigationShell);
@@ -42,7 +67,7 @@ final routes = GoRouter(
               path: '/discover',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: DiscoverPage(
-                    label: 'Discover', detailsPath: '/discover/dogDetails'),
+                    label: 'Dogs nearby', detailsPath: '/discover/dogDetails'),
               ),
               routes: [
                 GoRoute(

@@ -16,6 +16,14 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def debugKeystoreProperties = new Properties()
+def debugKeystorePropertiesFile = rootProject.file("debug.properties")
+if (debugKeystorePropertiesFile.exists()) {
+    debugKeystorePropertiesFile.withReader("UTF-8") { reader ->
+        debugKeystoreProperties.load(reader)
+    }
+}
+
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
     flutterVersionCode = "1"
@@ -41,13 +49,25 @@ android {
         applicationId = "com.example.tindog"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
 
+    signingConfigs {
+        debug {
+            keyAlias = debugKeystoreProperties.getProperty('keyAlias')
+            keyPassword = debugKeystoreProperties.getProperty('keyPassword')
+            storeFile = debugKeystoreProperties.getProperty('storeFile')
+            storePassword = debugKeystoreProperties.getProperty('storePassword')
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.debug
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.

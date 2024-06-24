@@ -38,8 +38,8 @@ class $AssetsIconsGen {
   SvgGenImage get appleLight =>
       const SvgGenImage('assets/icons/apple_light.svg');
 
-  /// File path: assets/icons/chat.svg
-  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
+  /// File path: assets/icons/chats.svg
+  SvgGenImage get chats => const SvgGenImage('assets/icons/chats.svg');
 
   /// File path: assets/icons/dog.svg
   SvgGenImage get dog => const SvgGenImage('assets/icons/dog.svg');
@@ -62,7 +62,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [appleLight, chat, dog, google, googleLight, paw, send];
+      [appleLight, chats, dog, google, googleLight, paw, send];
 }
 
 class $AssetsImagesGen {
@@ -86,6 +86,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/nope.png
   AssetGenImage get nope => const AssetGenImage('assets/images/nope.png');
 
+  /// File path: assets/images/onboarding_welcome.png
+  AssetGenImage get onboardingWelcome =>
+      const AssetGenImage('assets/images/onboarding_welcome.png');
+
   /// File path: assets/images/toro.jpeg
   AssetGenImage get toro => const AssetGenImage('assets/images/toro.jpeg');
 
@@ -103,6 +107,7 @@ class $AssetsImagesGen {
         arrowDownSmall,
         like,
         nope,
+        onboardingWelcome,
         toro,
         welcomeHeader
       ];

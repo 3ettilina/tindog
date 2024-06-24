@@ -16,7 +16,7 @@ class DiscoverPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomAppBar(label: 'Dogs nearby'),
+        CustomAppBar(label: label),
         Expanded(
           flex: 6,
           child: Padding(

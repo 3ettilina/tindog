@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
           NavigationDestination(
               icon: Assets.icons.dog.svg(width: 24), label: 'Discover'),
           NavigationDestination(
-            icon: Assets.icons.chat.svg(width: 24),
+            icon: Assets.icons.chats.svg(width: 24),
             label: 'Chats',
           ),
           NavigationDestination(

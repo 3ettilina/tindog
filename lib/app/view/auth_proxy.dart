@@ -12,7 +12,7 @@ class AuthProxy extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.go('/discover');
+          context.go('/onboarding');
         }
       },
       child: const AuthPage(),
