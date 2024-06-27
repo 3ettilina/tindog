@@ -1,0 +1,19 @@
+name: tindog_repository
+description: Repository layer of the Tindog application
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  core:
+    path: ../core
+  auth_repository:
+    path: ../auth_repository
+  tindog_data_source:
+    path: ../tindog_data_source
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.24.0

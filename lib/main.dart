@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tindog/app/routes/main_routes.dart';
 import 'package:tindog/auth/bloc/auth_bloc.dart';
 import 'package:tindog/firebase_options.dart';
+import 'package:tindog_repository/tindog_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,17 +33,20 @@ class MainProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => AuthBloc(),
-        )
-      ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: routes,
-        title: 'TinDog',
-        theme: AppTheme.light,
+    return RepositoryProvider(
+      create: (context) => TindogRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthBloc(),
+          ),
+        ],
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: routes,
+          title: 'TinDog',
+          theme: AppTheme.light,
+        ),
       ),
     );
   }

@@ -1,4 +1,4 @@
-package com.example.tindog
+package com.tindog.app
 
 import io.flutter.embedding.android.FlutterActivity
 

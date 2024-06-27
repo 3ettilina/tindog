@@ -7,6 +7,10 @@ class FirebaseAuthService implements AuthService {
 
   final FirebaseAuth _auth;
 
+  // TODO(3ettilina): Complete
+  StreamSubscription<User?> currentUserStream() =>
+      _auth.authStateChanges().listen((user) {});
+
   @override
   Future<String?> appleSignIn() async {
     try {
@@ -20,7 +24,13 @@ class FirebaseAuthService implements AuthService {
   @override
   Future<String?> googleSignIn() async {
     try {
-      final auth = await _auth.signInWithProvider(GoogleAuthProvider());
+      final googleUser = await GoogleSignIn().signIn();
+      final googleAuth = await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      final auth = await _auth.signInWithCredential(credential);
       return auth.user?.uid;
     } catch (e) {
       return null;

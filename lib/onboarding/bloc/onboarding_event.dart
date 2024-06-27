@@ -10,5 +10,5 @@ class RequestGalleryPermission extends OnboardingEvent {}
 class SelectDogImage extends OnboardingEvent {
   SelectDogImage({required this.image});
 
-  final Uint8List image;
+  final File image;
 }

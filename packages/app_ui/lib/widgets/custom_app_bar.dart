@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     required this.label,
+    this.caption,
     super.key,
   });
 
   final String label;
+  final String? caption;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +28,24 @@ class CustomAppBar extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 20, top: 30),
-            child: Text(
-              label,
-              style: context.textTheme.headlineLarge!.copyWith(
-                color: context.theme.canvasColor,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: context.textTheme.headlineLarge!.copyWith(
+                    color: context.theme.canvasColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                if (caption != null)
+                  Text(
+                    caption!,
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      color: context.theme.canvasColor,
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

@@ -83,6 +83,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
+  /// File path: assets/images/loading_paws.gif
+  AssetGenImage get loadingPaws =>
+      const AssetGenImage('assets/images/loading_paws.gif');
+
   /// File path: assets/images/nope.png
   AssetGenImage get nope => const AssetGenImage('assets/images/nope.png');
 
@@ -106,6 +110,7 @@ class $AssetsImagesGen {
         arrowDownDouble,
         arrowDownSmall,
         like,
+        loadingPaws,
         nope,
         onboardingWelcome,
         toro,

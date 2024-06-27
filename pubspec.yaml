@@ -24,6 +24,8 @@ dependencies:
   firebase_core: ^3.1.0
   equatable: ^2.0.5
   permission_handler: ^11.3.1
+  tindog_repository:
+    path: packages/tindog_repository
 
 dev_dependencies:
   flutter_test:

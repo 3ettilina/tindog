@@ -16,12 +16,10 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def debugKeystoreProperties = new Properties()
-def debugKeystorePropertiesFile = rootProject.file("debug.properties")
-if (debugKeystorePropertiesFile.exists()) {
-    debugKeystorePropertiesFile.withReader("UTF-8") { reader ->
-        debugKeystoreProperties.load(reader)
-    }
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
@@ -35,7 +33,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.tindog"
+    namespace = "com.tindog.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -46,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.tindog"
+        applicationId = "com.tindog.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 23
@@ -57,10 +55,16 @@ android {
 
     signingConfigs {
         debug {
-            keyAlias = debugKeystoreProperties.getProperty('keyAlias')
-            keyPassword = debugKeystoreProperties.getProperty('keyPassword')
-            storeFile = debugKeystoreProperties.getProperty('storeFile')
-            storePassword = debugKeystoreProperties.getProperty('storePassword')
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 

@@ -286,14 +286,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  flutter_form_builder:
-    dependency: transitive
-    description:
-      name: flutter_form_builder
-      sha256: "447f8808f68070f7df968e8063aada3c9d2e90e789b5b70f3b44e4b315212656"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.3.0"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -344,14 +336,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  form_builder_image_picker:
-    dependency: "direct main"
-    description:
-      name: form_builder_image_picker
-      sha256: d3920ba0472db8d66a96ab49d9103eb7c60699451e9d3674f24657cf87e2019d
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -417,7 +401,7 @@ packages:
     source: hosted
     version: "4.0.2"
   image_picker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image_picker
       sha256: b6951e25b795d053a6ba03af5f710069c99349de9341af95155d52665cb4607c
@@ -488,14 +472,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.19.0"
   io:
     dependency: transitive
     description:

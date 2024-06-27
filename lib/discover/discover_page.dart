@@ -16,7 +16,10 @@ class DiscoverPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomAppBar(label: label),
+        CustomAppBar(
+          label: label,
+          caption: '📍Berlin, Germany',
+        ),
         Expanded(
           flex: 6,
           child: Padding(
