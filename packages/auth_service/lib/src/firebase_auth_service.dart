@@ -7,10 +7,6 @@ class FirebaseAuthService implements AuthService {
 
   final FirebaseAuth _auth;
 
-  // TODO(3ettilina): Complete
-  StreamSubscription<User?> currentUserStream() =>
-      _auth.authStateChanges().listen((user) {});
-
   @override
   Future<String?> appleSignIn() async {
     try {

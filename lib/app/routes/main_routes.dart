@@ -7,9 +7,8 @@ import 'package:tindog/chats/chats_page.dart';
 import 'package:tindog/chats/details/chat_details_page.dart';
 import 'package:tindog/discover/details/dog_details_page.dart';
 import 'package:tindog/discover/discover_page.dart';
-import 'package:tindog/onboarding/dog_image_selection/dog_image_selection_view.dart';
+import 'package:tindog/onboarding/dog_details/add_dog_details_page.dart';
 import 'package:tindog/onboarding/onboarding_page.dart';
-import 'package:tindog/onboarding/view/onboarding_dog_details.dart';
 import 'package:tindog/profile/profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -39,19 +38,14 @@ final routes = GoRouter(
       builder: (context, state) => const OnboardingPage(),
       routes: [
         GoRoute(
-          name: 'dogImage',
-          path: 'dogImage',
-          builder: (context, state) => const DogImageSelectionView(),
-        ),
-        GoRoute(
           name: 'dogDetails',
           path: 'dogDetails',
-          builder: (context, state) => const OnboardingDogDetails(),
+          builder: (context, state) => const AddDogDetailsPage(),
         ),
         GoRoute(
           name: 'location',
           path: 'location',
-          builder: (context, state) => const OnboardingDogDetails(),
+          builder: (context, state) => const AddDogDetailsPage(),
         )
       ],
     ),
@@ -65,6 +59,7 @@ final routes = GoRouter(
           routes: [
             GoRoute(
               path: '/discover',
+              name: 'discover',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: DiscoverPage(
                     label: 'Dogs near', detailsPath: '/discover/dogDetails'),

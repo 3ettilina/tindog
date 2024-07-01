@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auth_repository/auth_repository.dart';
 import 'package:core/core.dart';
+import 'package:tindog_data_source/dto/dog/dog_dto.dart';
 import 'package:tindog_data_source/exceptions/analyze_dog.dart';
 import 'package:tindog_data_source/exceptions/create_dog_exception.dart';
 import 'package:tindog_data_source/tindog_data_source.dart';
@@ -28,8 +29,10 @@ class TindogRepository {
       }
       final analyzeDogResult = await _dataSource.analyzeDog(image: dogImage);
       final output = AnalyzeDogDetails(
+        id: analyzeDogResult.id,
+        imagePath: analyzeDogResult.filePath,
         breed: analyzeDogResult.breed,
-        size: analyzeDogResult.size,
+        size: DogSize.fromName(analyzeDogResult.size),
         description: analyzeDogResult.description,
       );
       return output;
@@ -44,6 +47,33 @@ class TindogRepository {
     } catch (e) {
       return AnalyzeDogError(
           message: 'Something went wrong while creating the Dog');
+    }
+  }
+
+  Future<CreateDogProfileResponse> submitDogProfile({
+    required Dog dog,
+  }) async {
+    final user = await _authRepository.currentUser();
+    final dto = DogDto(
+      id: dog.id,
+      name: dog.name,
+      breed: dog.breed,
+      gender: dog.gender.toString(),
+      age: '${dog.age.value} ${dog.age.unit}',
+      size: dog.size.toString(),
+      filePath: dog.imagePath,
+      isNeutered: dog.isNeutered,
+      interests: dog.interests,
+      description: dog.description,
+      userId: user!,
+    );
+    try {
+      await _dataSource.createDog(dog: dto);
+      return CreateDogProfileSuccess();
+    } on CreateDogException catch (_) {
+      return CreateDogProfileError(
+        'Something went wrong while creating the profile :(',
+      );
     }
   }
 }

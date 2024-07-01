@@ -1,4 +1,9 @@
 enum DogGender {
-  male,
-  female,
+  male(),
+  female();
+
+  @override
+  String toString() {
+    return name;
+  }
 }

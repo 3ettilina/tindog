@@ -24,11 +24,20 @@ class $AssetsAnimationsGen {
   LottieGenImage get arrowDownShort =>
       const LottieGenImage('assets/animations/arrow_down_short.json');
 
+  /// File path: assets/animations/error.json
+  LottieGenImage get error =>
+      const LottieGenImage('assets/animations/error.json');
+
+  /// File path: assets/animations/success.json
+  LottieGenImage get success =>
+      const LottieGenImage('assets/animations/success.json');
+
   /// Directory path: assets/animations
   String get path => 'assets/animations';
 
   /// List of all assets
-  List<LottieGenImage> get values => [arrowDown, arrowDownShort];
+  List<LottieGenImage> get values =>
+      [arrowDown, arrowDownShort, error, success];
 }
 
 class $AssetsIconsGen {
@@ -80,8 +89,16 @@ class $AssetsImagesGen {
   AssetGenImage get arrowDownSmall =>
       const AssetGenImage('assets/images/arrow_down_small.gif');
 
+  /// File path: assets/images/dog_girl_welcome.jpg
+  AssetGenImage get dogGirlWelcome =>
+      const AssetGenImage('assets/images/dog_girl_welcome.jpg');
+
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
+
+  /// File path: assets/images/loading_paw.gif
+  AssetGenImage get loadingPaw =>
+      const AssetGenImage('assets/images/loading_paw.gif');
 
   /// File path: assets/images/loading_paws.gif
   AssetGenImage get loadingPaws =>
@@ -109,7 +126,9 @@ class $AssetsImagesGen {
         arrowDown,
         arrowDownDouble,
         arrowDownSmall,
+        dogGirlWelcome,
         like,
+        loadingPaw,
         loadingPaws,
         nope,
         onboardingWelcome,

@@ -45,7 +45,7 @@ class _AppImagePickerState extends State<AppImagePicker> {
             Image.file(
               File(selectedImage!.path),
               height: 180,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
             if (widget.isLoading) Assets.images.loadingPaws.image(height: 170),
           ],

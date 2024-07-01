@@ -12,12 +12,13 @@ class DogDto extends Equatable {
     required this.gender,
     required this.age,
     required this.size,
-    required this.imageUrl,
+    required this.filePath,
     required this.isNeutered,
     this.likes = const <String>[],
     this.seen = const <String>[],
     required this.interests,
     required this.description,
+    required this.userId,
   });
 
   factory DogDto.fromJson(Map<String, dynamic> json) => _$DogDtoFromJson(json);
@@ -28,14 +29,15 @@ class DogDto extends Equatable {
   final String name;
   final String breed;
   final String gender;
-  final int age;
+  final String age;
   final String size;
-  final String imageUrl;
+  final String filePath;
   final bool isNeutered;
   final List<String> interests;
   final List<String> likes;
   final List<String> seen;
   final String description;
+  final String userId;
 
   @override
   List<Object?> get props => [
@@ -45,10 +47,12 @@ class DogDto extends Equatable {
         gender,
         age,
         size,
-        imageUrl,
+        filePath,
         likes,
         seen,
         isNeutered,
         interests,
+        description,
+        userId,
       ];
 }

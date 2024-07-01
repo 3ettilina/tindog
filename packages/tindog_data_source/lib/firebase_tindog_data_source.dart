@@ -46,7 +46,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
       await newDog.set(dog);
     } catch (e) {
       throw CreateDogException(
-          message: 'Something went wrong while creating the dog,');
+        message: 'Something went wrong while creating the dog,',
+      );
     }
   }
 
@@ -75,12 +76,9 @@ class FirebaseTindogDataSource implements TindogDataSource {
               'associated to a dog.',
         );
       }
-      final dogImageUrl = Uri.encodeComponent(
-        '$_baseStorageUrl/$_dogImagesStoragePath/${newDog.id}.jpeg',
-      );
-      print(dogImageUrl);
-      // Adding the 'filePath' as it doesn't come from the dogDataFlow response
-      analyzeDogData.addAll({'filePath': dogImageUrl});
+      final dogImageUrl =
+          '$_baseStorageUrl/$_dogImagesStoragePath/${newDog.id}.jpeg';
+      analyzeDogData.addAll({'filePath': dogImageUrl, 'id': newDog.id});
       final analyzeDog = AnalyzedDogDto.fromJson(analyzeDogData);
       return analyzeDog;
     } on FirebaseFunctionsException catch (error) {
@@ -90,7 +88,7 @@ class FirebaseTindogDataSource implements TindogDataSource {
       );
       dev.log('The error is: ${error.message}');
       throw UnableToAnalyzeDog(message: error.message ?? error.details);
-    } on ImageUploadedIsNotADogException catch (e) {
+    } on ImageUploadedIsNotADogException catch (_) {
       rethrow;
     } catch (e) {
       dev.log(

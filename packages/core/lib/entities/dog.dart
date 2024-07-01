@@ -9,24 +9,24 @@ class Dog extends Equatable {
     required this.gender,
     required this.age,
     required this.size,
-    required this.photos,
+    required this.imagePath,
     required this.isNeutered,
     required this.interests,
-    required this.temperament,
-    required this.location,
+    required this.description,
+    this.userId,
   });
 
   final String id;
   final String name;
   final String breed;
   final DogGender gender;
-  final int age;
+  final Age age;
   final DogSize size;
-  final List<String> photos;
+  final String imagePath;
   final bool isNeutered;
-  final List<DogInterest> interests;
-  final List<DogTemperament> temperament;
-  final String location;
+  final List<String> interests;
+  final String description;
+  final String? userId;
 
   @override
   List<Object?> get props => [
@@ -36,9 +36,10 @@ class Dog extends Equatable {
         gender,
         age,
         size,
-        photos,
+        imagePath,
         isNeutered,
         interests,
-        temperament,
+        description,
+        userId,
       ];
 }

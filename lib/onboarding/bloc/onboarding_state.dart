@@ -1,70 +1,68 @@
 part of 'onboarding_bloc.dart';
 
-@immutable
 sealed class OnboardingState extends Equatable {
-  bool get isContinueAllowed => this is OnboardingImageReadyState;
+  const OnboardingState();
 
   @override
   List<Object?> get props => [];
 }
 
-class OnboardingInitialState extends OnboardingState {}
-
-class OnboardingNeedsGalleryPermissionState extends OnboardingState {}
-
-class OnboardingNeedsGalleryPermissionOnSettingsState extends OnboardingState {}
-
-class OnboardingGalleryAccessGrantedState extends OnboardingState {}
-
-class OnboardingImageSelectedState extends OnboardingState {
-  OnboardingImageSelectedState({required this.image});
-
-  final File image;
-
-  @override
-  List<Object?> get props => [image, ...super.props];
+class OnboardingDogImageStepState extends OnboardingState {
+  const OnboardingDogImageStepState();
 }
 
-class OnboardingImageAnalyzingState extends OnboardingState {
-  OnboardingImageAnalyzingState({required this.image});
-
-  final File image;
-
-  @override
-  List<Object?> get props => [image, ...super.props];
-}
-
-class OnboardingImageReadyState extends OnboardingState {
-  OnboardingImageReadyState({required this.image});
-
-  final File image;
-
-  @override
-  List<Object?> get props => [image, ...super.props];
-}
-
-class OnboardingImageIsNotADogState extends OnboardingState {
-  OnboardingImageIsNotADogState({
-    required this.image,
-    required this.message,
+class OnboardingDogDetailsState extends OnboardingState {
+  const OnboardingDogDetailsState({
+    required this.id,
+    required this.imagePath,
+    required this.breed,
+    required this.size,
+    required this.description,
   });
 
-  final File image;
-  final String message;
+  final String id;
+  final String imagePath;
+  final String breed;
+  final String size;
+  final String description;
 
   @override
-  List<Object?> get props => [image, message, ...super.props];
+  List<Object?> get props => [id, imagePath, breed, size, description];
 }
 
-class OnboardingImageErrorState extends OnboardingState {
-  OnboardingImageErrorState({
-    required this.image,
-    required this.message,
+class OnboardingDogCompletedState extends OnboardingState {
+  const OnboardingDogCompletedState({
+    required this.id,
+    required this.imagePath,
+    required this.name,
+    required this.breed,
+    required this.gender,
+    required this.age,
+    required this.isNeutered,
+    required this.interests,
+    required this.description,
   });
 
-  final File image;
-  final String message;
+  final String id;
+  final String imagePath;
+  final String name;
+  final String breed;
+  final String gender;
+  final int age;
+  final bool isNeutered;
+  final List<String> interests;
+  final String description;
 
   @override
-  List<Object?> get props => [image, message, ...super.props];
+  List<Object?> get props => [
+        id,
+        imagePath,
+        name,
+        breed,
+        gender,
+        age,
+        isNeutered,
+        interests,
+        description,
+      ];
 }

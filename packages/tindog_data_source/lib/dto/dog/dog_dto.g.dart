@@ -11,9 +11,9 @@ DogDto _$DogDtoFromJson(Map<String, dynamic> json) => DogDto(
       name: json['name'] as String,
       breed: json['breed'] as String,
       gender: json['gender'] as String,
-      age: (json['age'] as num).toInt(),
+      age: json['age'] as String,
       size: json['size'] as String,
-      imageUrl: json['imageUrl'] as String,
+      filePath: json['filePath'] as String,
       isNeutered: json['isNeutered'] as bool,
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
@@ -24,6 +24,7 @@ DogDto _$DogDtoFromJson(Map<String, dynamic> json) => DogDto(
       interests:
           (json['interests'] as List<dynamic>).map((e) => e as String).toList(),
       description: json['description'] as String,
+      userId: json['userId'] as String,
     );
 
 Map<String, dynamic> _$DogDtoToJson(DogDto instance) => <String, dynamic>{
@@ -33,10 +34,11 @@ Map<String, dynamic> _$DogDtoToJson(DogDto instance) => <String, dynamic>{
       'gender': instance.gender,
       'age': instance.age,
       'size': instance.size,
-      'imageUrl': instance.imageUrl,
+      'filePath': instance.filePath,
       'isNeutered': instance.isNeutered,
       'interests': instance.interests,
       'likes': instance.likes,
       'seen': instance.seen,
       'description': instance.description,
+      'userId': instance.userId,
     };
