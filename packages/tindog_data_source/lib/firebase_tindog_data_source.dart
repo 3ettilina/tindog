@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:io';
 
@@ -21,8 +22,9 @@ class FirebaseTindogDataSource implements TindogDataSource {
     FirebaseFunctions? functions,
   })  : _dogsCollection = dogsCollection ??
             FirebaseFirestore.instance.collection('dogs').withConverter(
-                  fromFirestore: (docSnapshot, _) =>
-                      DogDto.fromJson(docSnapshot.data()!),
+                  fromFirestore: (docSnapshot, _) => DogDto.fromJson(
+                    docSnapshot.data()!,
+                  ),
                   toFirestore: (dogDto, _) => dogDto.toJson(),
                 ),
         _chatsCollection = chatsCollection ??
@@ -57,27 +59,22 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }) async {
     try {
       final newDog = _dogsCollection.doc();
-      await _storage
-          .ref()
-          .child('$_dogImagesStoragePath/${newDog.id}.jpeg')
-          .putFile(image);
+      final imageStoragePath = '$_dogImagesStoragePath/${newDog.id}.jpeg';
+      await _storage.ref().child(imageStoragePath).putFile(image);
 
       final analyzeDogResult =
           await _functions.httpsCallable('dogDataFlow').call({
-        'filePath': '$_dogImagesStoragePath/${newDog.id}.jpeg',
+        'filePath': imageStoragePath,
       });
       final analyzeDogData = analyzeDogResult.data as Map<String, dynamic>;
 
-      print(analyzeDogData);
       final isDog = analyzeDogData['isDog'] as bool;
       if (!isDog) {
         throw ImageUploadedIsNotADogException(
-          message: 'The image you picked is not'
-              'associated to a dog.',
+          message: 'We could not identify the dog in your image',
         );
       }
-      final dogImageUrl =
-          '$_baseStorageUrl/$_dogImagesStoragePath/${newDog.id}.jpeg';
+      final dogImageUrl = '$_baseStorageUrl/$imageStoragePath';
       analyzeDogData.addAll({'filePath': dogImageUrl, 'id': newDog.id});
       final analyzeDog = AnalyzedDogDto.fromJson(analyzeDogData);
       return analyzeDog;
@@ -101,140 +98,110 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }
 
   @override
-  Future<InitialMessageChatDto> createChatForDogs({
-    required String firstDogId,
-    required String secondDogId,
+  Future<void> createChatForDogs({
+    required String myDogId,
+    required String likedDogId,
   }) async {
     try {
-      final matchDogsResult = await _functions.httpsCallable('matchDogs').call({
-        'firstDogId': firstDogId,
-        'secondDogId': secondDogId,
+      await _functions.httpsCallable('matchDogs').call({
+        'firstDogId': myDogId,
+        'secondDogId': likedDogId,
       });
-
-      final matchDogsJson = matchDogsResult as Map<String, dynamic>;
-      final initialMessageJson = matchDogsJson['text'] as Map<String, dynamic>;
-      final initialMessage = InitialMessageChatDto.fromJson(initialMessageJson);
-      return initialMessage;
     } on FirebaseFunctionsException catch (error) {
-      final errorCode = error.code;
-      switch (errorCode) {
-        case 'unauthenticated':
-          throw UserNotAuthenticatedException(
-            message: error.message ?? error.details,
-          );
-        case 'invalid-argument':
-          throw ArgumentError(error.message);
-        case 'permission-denied':
-          throw UserNotAuthorizedException(
-              message: error.message ?? error.details);
-        case 'already-exists':
-          throw ChatAlreadyExistsException(
-              message: error.message ?? error.details);
-        default:
-          throw UnableToCreateChatException(
-              message: error.message ?? error.details);
-      }
+      throw UnableToCreateChatException(
+        message: error.message ?? error.details,
+      );
     } catch (e) {
       throw UnableToCreateChatException(message: e.toString());
     }
   }
 
   @override
-  Future<void> dislikeDog({
-    required String dogIdFrom,
-    required String dogIdToDislike,
+  Future<bool> likeDog({
+    required DogDto myDog,
+    required DogDto dogToLike,
   }) async {
     try {
-      final dogRef = _dogsCollection.doc(dogIdFrom);
-      final dogSnapshot = await dogRef.get();
-      final dogDetails = dogSnapshot.data();
-      if (dogDetails != null) {
-        final seen = List<String>.from(dogDetails.seen)..add(dogIdToDislike);
-        await dogRef.update({
-          'seen': seen,
-        });
-      }
+      final dogRef = _dogsCollection.doc(myDog.id);
+      await dogRef.update({
+        'likes': FieldValue.arrayUnion([dogToLike.id]),
+        'seen': FieldValue.arrayUnion([dogToLike.id]),
+      });
+      return hasMatch(myDog: myDog, likedDog: dogToLike);
+    } catch (e) {
+      throw UnableToLikeDogException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> dislikeDog({
+    required DogDto myDog,
+    required DogDto dogToDislike,
+  }) async {
+    try {
+      final dogRef = _dogsCollection.doc(myDog.id);
+      await dogRef.update({
+        'seen': FieldValue.arrayUnion([dogToDislike.id]),
+      });
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<List<ChatDto>> fetchChats({required String userId}) async {
+  Stream<List<ChatDto>> fetchChats({required String userId}) {
     try {
-      final chatsRef = await _chatsCollection
+      final chatTransformer =
+          StreamTransformer<QuerySnapshot<ChatDto>, List<ChatDto>>.fromHandlers(
+              handleData: (chatSnapshot, sink) {
+        final outputChats =
+            chatSnapshot.docs.map((chat) => chat.data()).toList();
+        sink.add(outputChats);
+      });
+      final chats = _chatsCollection
           .where('userIds', arrayContains: userId)
-          .orderBy('lastMessage.timestamp')
-          .get();
-      final chatsJson = chatsRef as List<Map<String, dynamic>>;
-      final chats = chatsJson.map(ChatDto.fromJson).toList();
+          .orderBy('updatedAt')
+          .snapshots()
+          .transform(chatTransformer);
       return chats;
     } catch (e) {
-      throw UnableToCreateChatException(message: e.toString());
+      throw UnableToFetchChatsException(message: e.toString());
     }
   }
 
   @override
-  Future<List<DogDto>> fetchDogs({
+  Stream<List<DogDto>> fetchDogs({
     required String dogId,
-    required String location,
-    required List<String> interests,
-  }) async {
+    required List<String> seenDogs,
+    String? city,
+    String? country,
+    List<String>? interests,
+  }) {
     try {
-      final currentDogRef = await _dogsCollection.doc(dogId).get();
-      final currentDog = currentDogRef.data();
-      final currentDogSeen = currentDog?.seen;
-
-      final dogsRef = await _dogsCollection
-          .where('dogId', whereNotIn: currentDogSeen)
-          .get();
-      final dogs = dogsRef.docs.map((doc) => doc.data()).toList();
-      return dogs;
+      final dogsTransformer =
+          StreamTransformer<QuerySnapshot<DogDto>, List<DogDto>>.fromHandlers(
+              handleData: (dogDtoList, sink) {
+        final outputDogs = List<DogDto>.empty(growable: true);
+        for (final dogDto in dogDtoList.docs) {
+          if (!seenDogs.contains(dogDto.id)) {
+            outputDogs.add(dogDto.data());
+          }
+        }
+        sink.add(outputDogs);
+      });
+      final dogsToSee = _dogsCollection.snapshots().transform(dogsTransformer);
+      return dogsToSee;
     } catch (e) {
       throw FetchDogsException(message: e.toString());
     }
   }
 
   @override
-  Future<bool> hasMatch({
-    required String firstDogId,
-    required String secondDogId,
-  }) async {
-    try {
-      final firstDogDoc = await _dogsCollection.doc(firstDogId).get();
-      final firstDogJson = firstDogDoc as Map<String, dynamic>;
-      final firstDog = DogDto.fromJson(firstDogJson);
-      final secondDogDoc = await _dogsCollection.doc(secondDogId).get();
-      final secondDogJson = secondDogDoc as Map<String, dynamic>;
-      final secondDog = DogDto.fromJson(secondDogJson);
-
-      final hasMatch = firstDog.likes.contains(secondDog.id) &&
-          secondDog.likes.contains(firstDogId);
-      return hasMatch;
-    } catch (e) {
-      throw MatchDogsException(message: e.toString());
-    }
-  }
-
-  @override
-  Future<void> likeDog({
-    required String dogIdFrom,
-    required String dogIdToLike,
-  }) async {
-    try {
-      final dogRef = _dogsCollection.doc(dogIdFrom);
-      final dogDoc = await dogRef.get();
-      final dogDetails = dogDoc.data()!;
-      final likedDogs = List<String>.from(dogDetails.likes)..add(dogIdToLike);
-      final seenDogs = List<String>.from(dogDetails.seen)..add(dogIdToLike);
-      await dogRef.update({
-        'likes': likedDogs,
-        'seen': seenDogs,
-      });
-    } catch (e) {
-      throw UnableToLikeDogException(message: e.toString());
-    }
-  }
+  bool hasMatch({
+    required DogDto myDog,
+    required DogDto likedDog,
+  }) =>
+      likedDog.likes.contains(myDog.id);
 
   @override
   Future<void> setDogDetails({
@@ -280,6 +247,18 @@ class FirebaseTindogDataSource implements TindogDataSource {
         message:
             'Something went wrong while sending the message, please try again.',
       );
+    }
+  }
+
+  @override
+  Future<DogDto?> checkUserHasDog({required String userId}) async {
+    try {
+      final snapshot =
+          await _dogsCollection.where('userId', isEqualTo: userId).get();
+      final userDog = snapshot.docs.first.data();
+      return userDog;
+    } catch (e) {
+      return null;
     }
   }
 }

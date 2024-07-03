@@ -36,14 +36,19 @@ class SelectDogImageBloc
     CheckGalleryPermission event,
     Emitter<SelectDogImageState> emit,
   ) async {
-    Permission.photos
-        .onGrantedCallback(
-            () => emit(const SelectDogImagePermissionGrantedState()))
-        .onDeniedCallback(
-            () => emit(const SelectDogImageNeedsGalleryPermissionsState()))
-        .onPermanentlyDeniedCallback(
-            () => const SelectDogImageNeedsGalleryPermissionsOnSettingsState());
-    Permission.photos.request();
+    await Permission.photos.request().then((status) {
+      switch (status) {
+        case PermissionStatus.denied:
+          emit(const SelectDogImageNeedsGalleryPermissionsState());
+        case PermissionStatus.granted:
+        case PermissionStatus.limited:
+        case PermissionStatus.provisional:
+          emit(const SelectDogImagePermissionGrantedState());
+        case PermissionStatus.restricted:
+        case PermissionStatus.permanentlyDenied:
+          emit(const SelectDogImagePermissionGrantedState());
+      }
+    });
   }
 
   Future<void> _onRequestGalleryPermission(

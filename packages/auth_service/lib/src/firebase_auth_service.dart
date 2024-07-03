@@ -34,7 +34,7 @@ class FirebaseAuthService implements AuthService {
   }
 
   @override
-  Future<String?> currentUser() async {
+  Future<String?> currentUserId() async {
     return _auth.currentUser?.uid;
   }
 }

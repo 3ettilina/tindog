@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/routes/main_routes.dart';
 import 'package:tindog/auth/bloc/auth_bloc.dart';
+import 'package:tindog/discover/bloc/discover_bloc.dart';
 import 'package:tindog/firebase_options.dart';
-import 'package:tindog/onboarding/bloc/onboarding_bloc.dart';
-import 'package:tindog/onboarding/dog_details/bloc/dog_details_cubit.dart';
+import 'package:tindog/onboarding/dog_details/bloc/add_dog_details_cubit.dart';
 import 'package:tindog/onboarding/dog_image_selection/bloc/select_dog_image_bloc.dart';
+import 'package:tindog/onboarding/request_location/bloc/location_request_bloc.dart';
+import 'package:tindog/profile/cubit/profile_cubit.dart';
 import 'package:tindog_repository/tindog_repository.dart';
 
 Future<void> main() async {
@@ -36,36 +38,29 @@ class MainProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = AuthRepository();
+    final authRepo = AuthRepository();
+    final tindogRepo = TindogRepository(authRepository: authRepo);
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => auth,
-        ),
-        RepositoryProvider(
-          create: (context) => TindogRepository(
-            authRepository: auth,
-          ),
-        ),
+        RepositoryProvider(create: (context) => authRepo),
+        RepositoryProvider(create: (context) => tindogRepo),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => AuthBloc(),
-          ),
-          BlocProvider(
-            create: (_) => OnboardingBloc(),
-          ),
-          BlocProvider(
-            create: (ctx) => DogDetailsCubit(
-              repository: ctx.read<TindogRepository>(),
+            create: (_) => AuthBloc(
+              authRepository: authRepo,
+              tindogRepository: tindogRepo,
             ),
-            lazy: false,
+          ),
+          BlocProvider(create: (_) => ProfileCubit()),
+          BlocProvider(create: (_) => LocationRequestBloc()),
+          BlocProvider(create: (_) => DiscoverBloc(repository: tindogRepo)),
+          BlocProvider(
+            create: (_) => AddDogDetailsCubit(repository: tindogRepo),
           ),
           BlocProvider(
-            create: (ctx) => SelectDogImageBloc(
-              repository: ctx.read<TindogRepository>(),
-            ),
+            create: (_) => SelectDogImageBloc(repository: tindogRepo),
           ),
         ],
         child: MaterialApp.router(

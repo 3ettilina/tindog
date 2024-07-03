@@ -25,6 +25,7 @@ class DogDto extends Equatable {
 
   Map<String, dynamic> toJson() => _$DogDtoToJson(this);
 
+  @JsonKey(includeToJson: false)
   final String id;
   final String name;
   final String breed;

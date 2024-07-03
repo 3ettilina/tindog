@@ -8,7 +8,7 @@ import 'package:tindog/chats/details/chat_details_page.dart';
 import 'package:tindog/discover/details/dog_details_page.dart';
 import 'package:tindog/discover/discover_page.dart';
 import 'package:tindog/onboarding/dog_details/add_dog_details_page.dart';
-import 'package:tindog/onboarding/onboarding_page.dart';
+import 'package:tindog/onboarding/dog_image_selection/dog_image_selection_page.dart';
 import 'package:tindog/profile/profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -35,7 +35,7 @@ final routes = GoRouter(
     GoRoute(
       name: 'onboarding',
       path: '/onboarding',
-      builder: (context, state) => const OnboardingPage(),
+      builder: (context, state) => const DogImageSelectionPage(),
       routes: [
         GoRoute(
           name: 'dogDetails',

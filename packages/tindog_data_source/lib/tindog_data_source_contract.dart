@@ -30,48 +30,57 @@ abstract class TindogDataSource {
     required DogDto dog,
   });
 
+  /// Verifies whether the current user already has a dog's profile
+  /// Finds a dog which contains a userId as the current UUID,
+  /// if exists then [true], otherwise [false]
+  Future<DogDto?> checkUserHasDog({
+    required String userId,
+  });
+
   /// Given a [location] and a list of [interests] <String>.
   /// Returns a list of [Dog]s that match the same location and any interest.
   /// If there's no match, it returns an empty list.
-  Future<List<DogDto>> fetchDogs({
+  Stream<List<DogDto>> fetchDogs({
     required String dogId,
-    required String location,
-    required List<String> interests,
+    required List<String> seenDogs,
+    String? city,
+    String? country,
+    List<String>? interests,
   });
 
   /// Handles the behavior of "liking" another dog.
-  /// Associates the [dogIdToLike] as one dog liked by [dogIdFrom]
-  Future<void> likeDog({
-    required String dogIdFrom,
-    required String dogIdToLike,
+  /// Associates the [dogIdToLike] as one dog liked by [myDog]
+  Future<bool> likeDog({
+    required DogDto myDog,
+    required DogDto dogToLike,
   });
 
   /// Handles the behavior of "disliking" another dog, so it doesn't show
   /// up again when calling fetchDogs().
-  /// Associates the [dogIdToDislike] as one dog not liked by [dogIdFrom]
+  /// Associates the [dogToDislike] as one dog not liked by [myDog]
   Future<void> dislikeDog({
-    required String dogIdFrom,
-    required String dogIdToDislike,
+    required DogDto myDog,
+    required DogDto dogToDislike,
   });
 
   /// Check whether a match has happened between 2 dogs.
   /// Should return true when [firstDogId] has liked [secondDogId] AND
   /// [secondDogId] has also liked [firstDogId].
-  Future<bool> hasMatch({
-    required String firstDogId,
-    required String secondDogId,
+  bool hasMatch({
+    required DogDto myDog,
+    required DogDto likedDog,
   });
 
   /// After a match happens, hit the backend with the two dog ids
   /// so a new personalized chat is created for them.
-  Future<InitialMessageChatDto> createChatForDogs({
-    required String firstDogId,
-    required String secondDogId,
+  Future<void> createChatForDogs({
+    required String myDogId,
+    required String likedDogId,
   });
 
   /// chats collection fetch by the ID of the User
   /// owner of the dog
-  Future<List<ChatDto>> fetchChats({
+  Stream<List<ChatDto>> fetchChats({
     required String userId,
   });
 

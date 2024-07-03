@@ -1,7 +1,7 @@
-part of 'dog_details_cubit.dart';
+part of 'add_dog_details_cubit.dart';
 
-sealed class DogDetailsState extends Equatable {
-  const DogDetailsState({
+sealed class AddDogDetailsState extends Equatable {
+  const AddDogDetailsState({
     this.id,
     this.imagePath,
     this.breed,
@@ -12,6 +12,7 @@ sealed class DogDetailsState extends Equatable {
     this.age = const Age(unit: AgeUnit.years),
     this.isNeutered = true,
     this.interests = const [],
+    this.userId,
   });
 
   final String? id;
@@ -24,6 +25,7 @@ sealed class DogDetailsState extends Equatable {
   final bool? isNeutered;
   final List<String>? interests;
   final String? description;
+  final String? userId;
 
   bool get isValid =>
       name.isNotNullOrEmpty &&
@@ -45,17 +47,18 @@ sealed class DogDetailsState extends Equatable {
         isNeutered,
         interests,
         description,
+        userId,
       ];
 }
 
-class DogDetailsInitial extends DogDetailsState {
+class DogDetailsInitial extends AddDogDetailsState {
   const DogDetailsInitial();
 
   @override
   List<Object?> get props => [];
 }
 
-class DogDetailsEditing extends DogDetailsState {
+class DogDetailsEditing extends AddDogDetailsState {
   const DogDetailsEditing({
     required super.id,
     required super.imagePath,
@@ -94,13 +97,14 @@ class DogDetailsEditing extends DogDetailsState {
   }
 }
 
-class DogDetailsSubmitting extends DogDetailsState {
+class DogDetailsSubmitting extends AddDogDetailsState {
   const DogDetailsSubmitting({
     required super.id,
     required super.imagePath,
     required super.breed,
     required super.size,
     required super.description,
+    required super.userId,
     super.gender,
     super.name,
     super.age = const Age(unit: AgeUnit.years),
@@ -109,14 +113,16 @@ class DogDetailsSubmitting extends DogDetailsState {
   });
 }
 
-class DogDetailsCompleted extends DogDetailsState {
-  const DogDetailsCompleted();
+class DogDetailsCompleted extends AddDogDetailsState {
+  const DogDetailsCompleted({required this.dog});
+
+  final Dog dog;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [dog];
 }
 
-class DogDetailsErrorSubmitting extends DogDetailsState {
+class DogDetailsErrorSubmitting extends AddDogDetailsState {
   const DogDetailsErrorSubmitting({
     required super.id,
     required super.imagePath,
@@ -128,6 +134,7 @@ class DogDetailsErrorSubmitting extends DogDetailsState {
     required super.age,
     required super.isNeutered,
     required super.interests,
+    required super.userId,
     required this.message,
   });
 

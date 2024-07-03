@@ -69,7 +69,14 @@ class SelectDogImageReadyState extends SelectDogImageState {
   final String description;
 
   @override
-  List<Object?> get props => [id, image, imagePath, breed, size, description];
+  List<Object?> get props => [
+        id,
+        image,
+        imagePath,
+        breed,
+        size,
+        description,
+      ];
 }
 
 class SelectDogImageErrorNotADogState extends SelectDogImageState {

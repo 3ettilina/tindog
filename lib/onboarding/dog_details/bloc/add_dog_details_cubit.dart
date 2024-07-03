@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/extensions/string_extensions.dart';
 import 'package:tindog_repository/tindog_repository.dart';
 
-part 'dog_details_state.dart';
+part 'add_dog_details_state.dart';
 
-class DogDetailsCubit extends Cubit<DogDetailsState> {
-  DogDetailsCubit({
+class AddDogDetailsCubit extends Cubit<AddDogDetailsState> {
+  AddDogDetailsCubit({
     required TindogRepository repository,
   })  : _repository = repository,
         super(const DogDetailsInitial());
@@ -108,6 +108,7 @@ class DogDetailsCubit extends Cubit<DogDetailsState> {
           age: st.age,
           isNeutered: st.isNeutered,
           interests: st.interests,
+          userId: st.userId,
         ),
       );
       final dog = Dog(
@@ -121,13 +122,14 @@ class DogDetailsCubit extends Cubit<DogDetailsState> {
         isNeutered: st.isNeutered!,
         interests: st.interests!,
         description: st.description!,
+        userId: st.userId!,
       );
 
       final response = await _repository.submitDogProfile(dog: dog);
 
       switch (response) {
         case CreateDogProfileSuccess():
-          emit(const DogDetailsCompleted());
+          emit(DogDetailsCompleted(dog: dog));
         case CreateDogProfileError():
           emit(
             DogDetailsErrorSubmitting(
@@ -142,6 +144,7 @@ class DogDetailsCubit extends Cubit<DogDetailsState> {
               age: st.age,
               isNeutered: st.isNeutered,
               interests: st.interests,
+              userId: st.userId,
             ),
           );
       }

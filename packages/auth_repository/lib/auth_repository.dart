@@ -9,8 +9,8 @@ class AuthRepository {
 
   final AuthService _authService;
 
-  Future<String?> currentUser() async {
-    return _authService.currentUser();
+  Future<String?> currentUserId() async {
+    return _authService.currentUserId();
   }
 
   Future<String?> signInWithGoogle() async {

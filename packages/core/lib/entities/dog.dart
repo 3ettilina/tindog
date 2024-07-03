@@ -13,7 +13,9 @@ class Dog extends Equatable {
     required this.isNeutered,
     required this.interests,
     required this.description,
-    this.userId,
+    required this.userId,
+    this.seen = const <String>[],
+    this.likes = const <String>[],
   });
 
   final String id;
@@ -25,8 +27,10 @@ class Dog extends Equatable {
   final String imagePath;
   final bool isNeutered;
   final List<String> interests;
+  final List<String> seen;
+  final List<String> likes;
   final String description;
-  final String? userId;
+  final String userId;
 
   @override
   List<Object?> get props => [
@@ -41,5 +45,7 @@ class Dog extends Equatable {
         interests,
         description,
         userId,
+        seen,
+        likes,
       ];
 }

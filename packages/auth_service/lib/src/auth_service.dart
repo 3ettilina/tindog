@@ -10,7 +10,7 @@ part 'firebase_auth_service.dart';
 /// {@endtemplate}
 abstract class AuthService {
   /// Returns the User UUID
-  Future<String?> currentUser();
+  Future<String?> currentUserId();
 
   /// Implements Sign In using Google SSO
   Future<String?> googleSignIn();

@@ -1,5 +1,10 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:core/entities/entities.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tindog/auth/bloc/auth_bloc.dart';
+import 'package:tindog/discover/bloc/discover_bloc.dart';
+import 'package:tindog/discover/discover_view.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({
@@ -13,43 +18,17 @@ class DiscoverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dog = context.select<AuthBloc, Dog?>((bloc) => bloc.state.userDog);
+    if (dog != null) {
+      context.read<DiscoverBloc>().add(FetchDogs(myDog: dog));
+    }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomAppBar(
           label: label,
           caption: '📍Berlin, Germany',
         ),
-        Expanded(
-          flex: 6,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: DogsSwipper(
-              dogs: [
-                Assets.images.toro.provider(),
-                Assets.images.toro.provider(),
-                Assets.images.toro.provider(),
-                Assets.images.toro.provider(),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Assets.images.nope.image(width: 50),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Assets.images.like.image(width: 50),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
+        const Expanded(child: DiscoverView()),
       ],
     );
   }

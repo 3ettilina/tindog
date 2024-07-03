@@ -24,6 +24,10 @@ class $AssetsAnimationsGen {
   LottieGenImage get arrowDownShort =>
       const LottieGenImage('assets/animations/arrow_down_short.json');
 
+  /// File path: assets/animations/empty.json
+  LottieGenImage get empty =>
+      const LottieGenImage('assets/animations/empty.json');
+
   /// File path: assets/animations/error.json
   LottieGenImage get error =>
       const LottieGenImage('assets/animations/error.json');
@@ -32,12 +36,16 @@ class $AssetsAnimationsGen {
   LottieGenImage get success =>
       const LottieGenImage('assets/animations/success.json');
 
+  /// File path: assets/animations/walking_dog.json
+  LottieGenImage get walkingDog =>
+      const LottieGenImage('assets/animations/walking_dog.json');
+
   /// Directory path: assets/animations
   String get path => 'assets/animations';
 
   /// List of all assets
   List<LottieGenImage> get values =>
-      [arrowDown, arrowDownShort, error, success];
+      [arrowDown, arrowDownShort, empty, error, success, walkingDog];
 }
 
 class $AssetsIconsGen {

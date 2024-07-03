@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tindog/auth/auth_page.dart';
+import 'package:tindog/app/view/welcome_splash.dart';
 import 'package:tindog/auth/bloc/auth_bloc.dart';
 
 class AuthProxy extends StatelessWidget {
@@ -12,10 +12,14 @@ class AuthProxy extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.goNamed('onboarding');
+          if (state.isNewUser) {
+            context.goNamed('onboarding');
+          } else {
+            context.pushNamed('discover');
+          }
         }
       },
-      child: const AuthPage(),
+      child: const WelcomeSplash(),
     );
   }
 }
