@@ -1,7 +1,7 @@
 enum DogSize {
-  small(),
-  medium(),
-  large();
+  small,
+  medium,
+  large;
 
   @override
   String toString() {

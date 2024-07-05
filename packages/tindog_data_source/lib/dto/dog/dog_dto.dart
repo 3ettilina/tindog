@@ -25,6 +25,36 @@ class DogDto extends Equatable {
 
   Map<String, dynamic> toJson() => _$DogDtoToJson(this);
 
+  factory DogDto.fromFirebaseCallable(Map<Object?, Object?> firebaseJson) {
+    final id = firebaseJson['id'] as String;
+    final name = firebaseJson['name'] as String;
+    final breed = firebaseJson['breed'] as String;
+    final gender = firebaseJson['gender'] as String;
+    final age = firebaseJson['age'] as String;
+    final size = firebaseJson['size'] as String;
+    final filePath = firebaseJson['filePath'] as String;
+    final isNeutered = firebaseJson['isNeutered'] as bool;
+    final interestsDynamic = firebaseJson['interests'] as List<Object?>;
+    final description = firebaseJson['description'] as String;
+    final userId = firebaseJson['userId'] as String;
+
+    final interests = interestsDynamic.map((e) => e?.toString() ?? '').toList();
+
+    return DogDto(
+      id: id,
+      name: name,
+      breed: breed,
+      gender: gender,
+      age: age,
+      size: size,
+      filePath: filePath,
+      isNeutered: isNeutered,
+      interests: interests,
+      description: description,
+      userId: userId,
+    );
+  }
+
   @JsonKey(includeToJson: false)
   final String id;
   final String name;

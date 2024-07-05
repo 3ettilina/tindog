@@ -59,6 +59,7 @@ class SelectDogImageReadyState extends SelectDogImageState {
     required this.breed,
     required this.size,
     required this.description,
+    required this.userId,
   });
 
   final String id;
@@ -67,6 +68,7 @@ class SelectDogImageReadyState extends SelectDogImageState {
   final String breed;
   final DogSize size;
   final String description;
+  final String userId;
 
   @override
   List<Object?> get props => [
@@ -76,6 +78,7 @@ class SelectDogImageReadyState extends SelectDogImageState {
         breed,
         size,
         description,
+        userId,
       ];
 }
 

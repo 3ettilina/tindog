@@ -1,8 +1,8 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
+class AppHeader extends StatelessWidget {
+  const AppHeader({
     required this.label,
     this.caption,
     super.key,

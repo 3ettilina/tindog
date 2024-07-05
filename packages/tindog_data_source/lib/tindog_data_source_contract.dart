@@ -33,20 +33,21 @@ abstract class TindogDataSource {
   /// Verifies whether the current user already has a dog's profile
   /// Finds a dog which contains a userId as the current UUID,
   /// if exists then [true], otherwise [false]
-  Future<DogDto?> checkUserHasDog({
+  Future<void> userDog({
     required String userId,
   });
 
-  /// Given a [location] and a list of [interests] <String>.
-  /// Returns a list of [Dog]s that match the same location and any interest.
-  /// If there's no match, it returns an empty list.
-  Stream<List<DogDto>> fetchDogs({
-    required String dogId,
-    required List<String> seenDogs,
+  Stream<DogDto?> get myDog;
+
+  /// Collects all dogs and adds it to a stream for easy consumption and update.
+  Future<void> fetchDogs({
+    required String myDogId,
     String? city,
     String? country,
     List<String>? interests,
   });
+
+  Stream<List<DogDto>> get dogs;
 
   /// Handles the behavior of "liking" another dog.
   /// Associates the [dogIdToLike] as one dog liked by [myDog]

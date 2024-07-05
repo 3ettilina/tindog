@@ -1,4 +1,4 @@
-import 'package:app_ui/cards/card_swiper/app_card_swiper_controller.dart';
+import 'package:app_ui/widgets/cards/card_swiper/app_card_swiper_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
@@ -34,16 +34,17 @@ class AppCardSwiper<T> extends StatelessWidget {
             return false;
           case CardSwiperDirection.left:
           case CardSwiperDirection.bottom:
-            final item = items[currentIndex!];
+            final item = items[oldIndex];
             onSwipeLeft(item);
             return true;
           case CardSwiperDirection.right:
           case CardSwiperDirection.top:
-            final item = items[currentIndex!];
+            final item = items[oldIndex];
             onSwipeRight(item);
             return true;
         }
       },
+      isLoop: false,
     );
   }
 }

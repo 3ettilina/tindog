@@ -4,8 +4,7 @@ import 'dart:io';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:core/core.dart';
 import 'package:tindog_data_source/dto/dog/dog_dto.dart';
-import 'package:tindog_data_source/exceptions/analyze_dog.dart';
-import 'package:tindog_data_source/exceptions/create_dog_exception.dart';
+import 'package:tindog_data_source/exceptions/exceptions.dart';
 import 'package:tindog_data_source/tindog_data_source.dart';
 import 'package:tindog_repository/extensions/dog_extension.dart';
 
@@ -19,23 +18,34 @@ class TindogRepository {
   final TindogDataSource _dataSource;
   final AuthRepository _authRepository;
 
-  Future<Dog?> checkUserHasDog({required String userId}) async {
-    final dogDto = await _dataSource.checkUserHasDog(userId: userId);
-    final dog = dogDto?.dog;
-    return dog;
+  Stream<List<Dog>?> _dogs = Stream.empty();
+  Stream<Dog?> _myDog = Stream.empty();
+  late Future<Dog?> myDogSync;
+
+  Future<void> checkUserHasDog({required String userId}) async {
+    await _dataSource.userDog(userId: userId);
+    _myDog = _dataSource.myDog.map((dto) {
+      final dog = dto?.dog;
+      myDogSync = Future.value(dog);
+      return dog;
+    });
   }
+
+  Stream<Dog?> get myDog => _myDog;
 
   Future<AnalyzeDogResult> verifyDogImage({
     required File dogImage,
   }) async {
     try {
       final analyzeDogResult = await _dataSource.analyzeDog(image: dogImage);
+      final user = await _authRepository.currentUserId();
       final output = AnalyzeDogDetails(
         id: analyzeDogResult.id,
         imagePath: analyzeDogResult.filePath,
         breed: analyzeDogResult.breed,
         size: DogSize.fromName(analyzeDogResult.size),
         description: analyzeDogResult.description,
+        userId: user!,
       );
       return output;
     } on ImageUploadedIsNotADogException catch (_) {
@@ -79,27 +89,25 @@ class TindogRepository {
     }
   }
 
-  Stream<FetchDogsResponse> fetchDogs({
-    required Dog myDog,
-  }) {
+  Future<void> fetchDogs({required Dog myDog}) async {
     try {
-      final dogsTransformer =
-          StreamTransformer<List<DogDto>, FetchDogsSuccess>.fromHandlers(
-              handleData: (dogDtoList, sink) {
-        final outputDogs = List<Dog>.empty(growable: true);
-        for (final dogDto in dogDtoList) {
-          outputDogs.add(dogDto.dog);
-        }
-        final response = FetchDogsSuccess(outputDogs);
-        sink.add(response);
+      await _dataSource.fetchDogs(myDogId: myDog.id);
+      _dogs = _dataSource.dogs.map((streamDto) {
+        final dogs = streamDto.map((dogDto) => dogDto.dog).toList();
+        return dogs;
       });
-      return _dataSource
-          .fetchDogs(dogId: myDog.id, seenDogs: myDog.seen)
-          .transform((dogsTransformer));
     } catch (e) {
-      return Stream.value(
-          FetchDogsError('Something went wrong while fetching dogs'));
+      _dogs = Stream.value(null);
     }
+  }
+
+  Stream<FetchDogsResponse> get dogs {
+    return _dogs.map((list) {
+      if (list == null) {
+        return FetchDogsError('Something went wrong while fetching dogs');
+      }
+      return FetchDogsSuccess(list);
+    });
   }
 
   Future<bool> dislikeDog({
@@ -117,7 +125,7 @@ class TindogRepository {
     }
   }
 
-  Future<bool> likeDog({
+  Future<LikeDogResponse> likeDog({
     required Dog myDog,
     required Dog dogToLike,
   }) async {
@@ -126,9 +134,16 @@ class TindogRepository {
         myDog: myDog.dto,
         dogToLike: dogToLike.dto,
       );
-      return hasMatch;
+      if (hasMatch) {
+        return DogsDidMatch(myDog: myDog, likedDog: dogToLike);
+      }
+      return DogLiked();
+    } on UnableToLikeDogException catch (_) {
+      return ErrorLikingDog();
+    } on UnableToCreateChatException catch (_) {
+      return ChatBetweenDogsAlreadyExists();
     } catch (e) {
-      return false;
+      return ErrorLikingDog();
     }
   }
 }

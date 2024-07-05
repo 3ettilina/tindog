@@ -17,4 +17,7 @@ abstract class AuthService {
 
   /// Implements Sign In using Apple SSO
   Future<String?> appleSignIn();
+
+  /// Handles log out of the user
+  Future<void> signOut();
 }

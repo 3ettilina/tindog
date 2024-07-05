@@ -65,6 +65,7 @@ class DogDetailsEditing extends AddDogDetailsState {
     required super.breed,
     required super.size,
     required super.description,
+    required super.userId,
     super.name,
     super.gender,
     super.age,
@@ -93,6 +94,7 @@ class DogDetailsEditing extends AddDogDetailsState {
       isNeutered: isNeutered ?? this.isNeutered,
       interests: interests ?? this.interests,
       description: description ?? this.description,
+      userId: userId,
     );
   }
 }

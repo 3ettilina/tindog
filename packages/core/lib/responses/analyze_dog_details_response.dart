@@ -33,6 +33,7 @@ class AnalyzeDogDetails extends AnalyzeDogResult {
     required this.breed,
     required this.size,
     required this.description,
+    required this.userId,
   });
 
   final String id;
@@ -40,7 +41,15 @@ class AnalyzeDogDetails extends AnalyzeDogResult {
   final String breed;
   final DogSize size;
   final String description;
+  final String userId;
 
   @override
-  List<Object?> get props => [id, imagePath, breed, size, description];
+  List<Object?> get props => [
+        id,
+        imagePath,
+        breed,
+        size,
+        description,
+        userId,
+      ];
 }

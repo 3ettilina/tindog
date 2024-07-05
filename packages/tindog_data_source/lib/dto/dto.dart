@@ -3,4 +3,3 @@ export 'chat/chat_dto.dart';
 export 'chat/dog_chat_dto.dart';
 export 'chat/message_chat_dto.dart';
 export 'dog/dog_dto.dart';
-export 'user/user_dto.dart';

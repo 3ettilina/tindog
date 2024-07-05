@@ -79,6 +79,7 @@ final routes = GoRouter(
           routes: [
             GoRoute(
               path: '/chats',
+              name: 'chats',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: ChatsPage(
                   label: 'Chats',

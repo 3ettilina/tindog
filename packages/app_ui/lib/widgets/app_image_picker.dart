@@ -38,19 +38,13 @@ class _AppImagePickerState extends State<AppImagePicker> {
   Widget build(BuildContext context) {
     late Widget content;
     if (selectedImage != null) {
-      content = ClipRRect(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.file(
-              File(selectedImage!.path),
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-            if (widget.isLoading) Assets.images.loadingPaws.image(height: 170),
-          ],
-        ),
-      );
+      content = CircleAvatar(
+          radius: 80,
+          backgroundImage: Image.file(
+            File(selectedImage!.path),
+            height: 180,
+            fit: BoxFit.cover,
+          ).image);
     } else {
       content = Container(
         decoration: BoxDecoration(

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/extensions/string_extensions.dart';
 import 'package:tindog_repository/tindog_repository.dart';
@@ -20,6 +21,7 @@ class AddDogDetailsCubit extends Cubit<AddDogDetailsState> {
     required String breed,
     required DogSize size,
     required String description,
+    required String userId,
   }) {
     emit(
       DogDetailsEditing(
@@ -28,6 +30,7 @@ class AddDogDetailsCubit extends Cubit<AddDogDetailsState> {
         breed: breed,
         size: size,
         description: description,
+        userId: userId,
       ),
     );
   }

@@ -20,4 +20,8 @@ class AuthRepository {
   Future<String?> signInWithApple() async {
     return _authService.appleSignIn();
   }
+
+  Future<void> signOut() async {
+    return _authService.signOut();
+  }
 }

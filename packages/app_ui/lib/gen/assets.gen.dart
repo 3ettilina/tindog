@@ -16,13 +16,9 @@ import 'package:lottie/lottie.dart';
 class $AssetsAnimationsGen {
   const $AssetsAnimationsGen();
 
-  /// File path: assets/animations/arrow_down.json
-  LottieGenImage get arrowDown =>
-      const LottieGenImage('assets/animations/arrow_down.json');
-
-  /// File path: assets/animations/arrow_down_short.json
-  LottieGenImage get arrowDownShort =>
-      const LottieGenImage('assets/animations/arrow_down_short.json');
+  /// File path: assets/animations/confetti.json
+  LottieGenImage get confetti =>
+      const LottieGenImage('assets/animations/confetti.json');
 
   /// File path: assets/animations/empty.json
   LottieGenImage get empty =>
@@ -45,7 +41,7 @@ class $AssetsAnimationsGen {
 
   /// List of all assets
   List<LottieGenImage> get values =>
-      [arrowDown, arrowDownShort, empty, error, success, walkingDog];
+      [confetti, empty, error, success, walkingDog];
 }
 
 class $AssetsIconsGen {

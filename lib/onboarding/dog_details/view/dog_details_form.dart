@@ -82,7 +82,7 @@ class DogDetailsForm extends StatelessWidget {
             ),
             AppChoiceChips<DogSize>.singleOption(
               defaultSingleValue: state.size,
-              options: DogSize.values,
+              options: List.from([DogSize.small, DogSize.medium, DogSize.large]),
               onValueSelected: cubit.setDogSize,
             ),
             const SizedBox(height: 20),

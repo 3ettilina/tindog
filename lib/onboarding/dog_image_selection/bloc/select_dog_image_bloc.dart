@@ -77,6 +77,7 @@ class SelectDogImageBloc
             breed: details.breed,
             size: details.size,
             description: details.description,
+            userId: details.userId,
           ),
         );
       case AnalyzeDogError():

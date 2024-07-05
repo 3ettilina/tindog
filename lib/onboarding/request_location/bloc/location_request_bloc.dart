@@ -6,5 +6,5 @@ part 'location_request_state.dart';
 
 class LocationRequestBloc
     extends Bloc<LocationRequestEvent, LocationRequestState> {
-  LocationRequestBloc() : super(const LocationRequestCheckingPermission()) {}
+  LocationRequestBloc() : super(const LocationRequestCheckingPermission());
 }

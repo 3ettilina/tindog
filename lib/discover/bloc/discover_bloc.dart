@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app_ui/cards/card_swiper/app_card_swiper_controller.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,43 +12,52 @@ part 'discover_state.dart';
 class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   DiscoverBloc({required TindogRepository repository})
       : _repository = repository,
+        swiperController = AppCardSwiperController(),
         super(const DiscoverFetchingDogsState()) {
     on<FetchDogs>(_onFetchDogs);
-    on<LikeDog>(_onLikeDog);
-    on<DislikeDog>(_onDislikeDog);
+    on<DogsFetched>(_onDogsFetched);
   }
 
   final TindogRepository _repository;
+
+  StreamSubscription<FetchDogsResponse>? _dogsSubscription;
+  AppCardSwiperController swiperController;
 
   Future<void> _onFetchDogs(
     FetchDogs event,
     Emitter<DiscoverState> emit,
   ) async {
-    _repository.fetchDogs(myDog: event.myDog).listen((response) {
-      switch (response) {
-        case FetchDogsSuccess():
-          emit(DiscoverReadyState(dogs: response.dogs));
-        case FetchDogsError():
-          emit(DiscoverErrorFetchingDogsState(response.message));
-      }
-    });
+    emit(const DiscoverFetchingDogsState());
+    await _repository.fetchDogs(myDog: event.myDog);
+
+    _dogsSubscription?.cancel();
+    _dogsSubscription = _repository.dogs.listen(
+      (response) => add(DogsFetched(response: response)),
+      onError: (e) => emit(
+        const DiscoverErrorFetchingDogsState(
+          'Something went wrong while fetching dogs',
+        ),
+      ),
+    );
   }
 
-  Future<void> _onLikeDog(
-    LikeDog event,
+  void _onDogsFetched(
+    DogsFetched event,
     Emitter<DiscoverState> emit,
-  ) =>
-      _repository.likeDog(
-        myDog: event.myDog,
-        dogToLike: event.dogToLike,
-      );
+  ) {
+    final response = event.response;
+    switch (response) {
+      case FetchDogsSuccess():
+        emit(DiscoverReadyState(dogs: response.dogs));
+      case FetchDogsError():
+        emit(DiscoverErrorFetchingDogsState(response.message));
+    }
+  }
 
-  Future<void> _onDislikeDog(
-    DislikeDog event,
-    Emitter<DiscoverState> emit,
-  ) =>
-      _repository.dislikeDog(
-        myDog: event.myDog,
-        dogToDislike: event.dogToDislike,
-      );
+  @override
+  Future<void> close() {
+    _dogsSubscription?.cancel();
+    swiperController.dispose();
+    return super.close();
+  }
 }

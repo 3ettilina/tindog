@@ -42,6 +42,7 @@ class DogImageSelectedListener extends StatelessWidget {
             breed: state.breed,
             size: state.size,
             description: state.description,
+            userId: state.userId,
           );
           Future.delayed(const Duration(milliseconds: 1500), () {
             context.pushNamed('dogDetails');

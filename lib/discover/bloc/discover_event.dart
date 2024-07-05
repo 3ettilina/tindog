@@ -12,22 +12,10 @@ class FetchDogs extends DiscoverEvent {
   final Dog myDog;
 }
 
-class LikeDog extends DiscoverEvent {
-  const LikeDog({
-    required this.myDog,
-    required this.dogToLike,
+class DogsFetched extends DiscoverEvent {
+  const DogsFetched({
+    required this.response,
   });
 
-  final Dog myDog;
-  final Dog dogToLike;
-}
-
-class DislikeDog extends DiscoverEvent {
-  const DislikeDog({
-    required this.myDog,
-    required this.dogToDislike,
-  });
-
-  final Dog myDog;
-  final Dog dogToDislike;
+  final FetchDogsResponse response;
 }

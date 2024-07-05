@@ -41,6 +41,11 @@ class FirebaseTindogDataSource implements TindogDataSource {
   final FirebaseStorage _storage;
   final FirebaseFunctions _functions;
 
+  late Stream<List<DogDto>> _dogs;
+  late Stream<DogDto?> _myDog;
+
+  final Set<String> _seenDogs = {};
+
   @override
   Future<void> createDog({required DogDto dog}) async {
     try {
@@ -123,12 +128,19 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }) async {
     try {
       final dogRef = _dogsCollection.doc(myDog.id);
+
       await dogRef.update({
         'likes': FieldValue.arrayUnion([dogToLike.id]),
         'seen': FieldValue.arrayUnion([dogToLike.id]),
       });
-      return hasMatch(myDog: myDog, likedDog: dogToLike);
+      _seenDogs.add(dogToLike.id);
+      final dogsDidMatch = hasMatch(myDog: myDog, likedDog: dogToLike);
+      createChatForDogs(myDogId: myDog.id, likedDogId: dogToLike.id);
+      return dogsDidMatch;
+    } on UnableToCreateChatException catch (e) {
+      throw UnableToCreateChatException(message: e.message);
     } catch (e) {
+      _seenDogs.remove(dogToLike.id);
       throw UnableToLikeDogException(message: e.toString());
     }
   }
@@ -140,10 +152,12 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }) async {
     try {
       final dogRef = _dogsCollection.doc(myDog.id);
+      _seenDogs.add(dogToDislike.id);
       await dogRef.update({
         'seen': FieldValue.arrayUnion([dogToDislike.id]),
       });
     } catch (e) {
+      _seenDogs.remove(dogToDislike.id);
       rethrow;
     }
   }
@@ -170,31 +184,28 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }
 
   @override
-  Stream<List<DogDto>> fetchDogs({
-    required String dogId,
-    required List<String> seenDogs,
+  Future<void> fetchDogs({
+    required String myDogId,
     String? city,
     String? country,
     List<String>? interests,
-  }) {
+  }) async {
     try {
-      final dogsTransformer =
-          StreamTransformer<QuerySnapshot<DogDto>, List<DogDto>>.fromHandlers(
-              handleData: (dogDtoList, sink) {
-        final outputDogs = List<DogDto>.empty(growable: true);
-        for (final dogDto in dogDtoList.docs) {
-          if (!seenDogs.contains(dogDto.id)) {
-            outputDogs.add(dogDto.data());
-          }
-        }
-        sink.add(outputDogs);
+      final Stream<QuerySnapshot<DogDto>> dogSnapshots =
+          _dogsCollection.orderBy('name').snapshots();
+      _dogs = dogSnapshots.map((snapshot) {
+        final dogsDtoNotMine = snapshot.docs.where((doc) => doc.id != myDogId);
+        final dogs = dogsDtoNotMine.map((dogDto) => dogDto.data());
+        final dogsNotSeen = dogs.where((dog) => !(_seenDogs.contains(dog.id))).toList();
+        return dogsNotSeen;
       });
-      final dogsToSee = _dogsCollection.snapshots().transform(dogsTransformer);
-      return dogsToSee;
     } catch (e) {
       throw FetchDogsException(message: e.toString());
     }
   }
+
+  @override
+  Stream<List<DogDto>> get dogs => _dogs;
 
   @override
   bool hasMatch({
@@ -218,9 +229,9 @@ class FirebaseTindogDataSource implements TindogDataSource {
   @override
   Future<DogDto> getDogDetails({required String dogId}) async {
     try {
-      final dogRef = _dogsCollection.doc(dogId).get();
-      final dogJson = dogRef as Map<String, dynamic>;
-      final dog = DogDto.fromJson(dogJson);
+      final dogRef = await _dogsCollection.doc(dogId).get();
+      final dog = dogRef.data()!;
+      _seenDogs.addAll(dog.seen);
       return dog;
     } catch (e) {
       throw UnableToGetDogDetailsException(message: e.toString());
@@ -251,14 +262,23 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }
 
   @override
-  Future<DogDto?> checkUserHasDog({required String userId}) async {
+  Future<void> userDog({required String userId}) async {
     try {
-      final snapshot =
-          await _dogsCollection.where('userId', isEqualTo: userId).get();
-      final userDog = snapshot.docs.first.data();
-      return userDog;
+      final Stream<QuerySnapshot<DogDto>> dogSnapshot =
+          _dogsCollection.where('userId', isEqualTo: userId).snapshots();
+      _myDog = dogSnapshot.map((snapshot) {
+        final result = snapshot.docs.map((doc) => doc.data()).toList().first;
+        
+        _seenDogs.clear();
+        _seenDogs.addAll(result.seen);
+
+        return result;
+      });
     } catch (e) {
-      return null;
+      return;
     }
   }
+
+  @override
+  Stream<DogDto?> get myDog => _myDog;
 }

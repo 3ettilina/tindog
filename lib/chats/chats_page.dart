@@ -15,7 +15,7 @@ class ChatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomAppBar(label: label),
+        AppHeader(label: label),
       ],
     );
   }

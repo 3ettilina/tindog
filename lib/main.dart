@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/routes/main_routes.dart';
 import 'package:tindog/auth/bloc/auth_bloc.dart';
 import 'package:tindog/discover/bloc/discover_bloc.dart';
+import 'package:tindog/discover/dogs_swiper/cubit/dog_swiper_cubit.dart';
 import 'package:tindog/firebase_options.dart';
 import 'package:tindog/onboarding/dog_details/bloc/add_dog_details_cubit.dart';
 import 'package:tindog/onboarding/dog_image_selection/bloc/select_dog_image_bloc.dart';
@@ -62,6 +63,9 @@ class MainProviders extends StatelessWidget {
           BlocProvider(
             create: (_) => SelectDogImageBloc(repository: tindogRepo),
           ),
+          BlocProvider(
+            create: (_) => DogSwiperCubit(tindogRepository: tindogRepo),
+          )
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
