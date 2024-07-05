@@ -7,6 +7,8 @@ import 'package:tindog/chats/chats_page.dart';
 import 'package:tindog/chats/details/chat_details_page.dart';
 import 'package:tindog/discover/details/dog_details_page.dart';
 import 'package:tindog/discover/discover_page.dart';
+import 'package:tindog/onboarding/dog_details/add_dog_details_page.dart';
+import 'package:tindog/onboarding/dog_image_selection/dog_image_selection_page.dart';
 import 'package:tindog/profile/profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -30,6 +32,23 @@ final routes = GoRouter(
       path: '/login',
       builder: (context, state) => const AuthPage(),
     ),
+    GoRoute(
+      name: 'onboarding',
+      path: '/onboarding',
+      builder: (context, state) => const DogImageSelectionPage(),
+      routes: [
+        GoRoute(
+          name: 'dogDetails',
+          path: 'dogDetails',
+          builder: (context, state) => const AddDogDetailsPage(),
+        ),
+        GoRoute(
+          name: 'location',
+          path: 'location',
+          builder: (context, state) => const AddDogDetailsPage(),
+        )
+      ],
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return HomePage(navigationShell: navigationShell);
@@ -40,9 +59,10 @@ final routes = GoRouter(
           routes: [
             GoRoute(
               path: '/discover',
+              name: 'discover',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: DiscoverPage(
-                    label: 'Discover', detailsPath: '/discover/dogDetails'),
+                    label: 'Dogs near', detailsPath: '/discover/dogDetails'),
               ),
               routes: [
                 GoRoute(
@@ -59,6 +79,7 @@ final routes = GoRouter(
           routes: [
             GoRoute(
               path: '/chats',
+              name: 'chats',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: ChatsPage(
                   label: 'Chats',

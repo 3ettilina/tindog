@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
 class ChatsPage extends StatelessWidget {
@@ -12,6 +13,10 @@ class ChatsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(
+      children: [
+        AppHeader(label: label),
+      ],
+    );
   }
 }

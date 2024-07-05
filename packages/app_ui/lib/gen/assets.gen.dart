@@ -16,19 +16,32 @@ import 'package:lottie/lottie.dart';
 class $AssetsAnimationsGen {
   const $AssetsAnimationsGen();
 
-  /// File path: assets/animations/arrow_down.json
-  LottieGenImage get arrowDown =>
-      const LottieGenImage('assets/animations/arrow_down.json');
+  /// File path: assets/animations/confetti.json
+  LottieGenImage get confetti =>
+      const LottieGenImage('assets/animations/confetti.json');
 
-  /// File path: assets/animations/arrow_down_short.json
-  LottieGenImage get arrowDownShort =>
-      const LottieGenImage('assets/animations/arrow_down_short.json');
+  /// File path: assets/animations/empty.json
+  LottieGenImage get empty =>
+      const LottieGenImage('assets/animations/empty.json');
+
+  /// File path: assets/animations/error.json
+  LottieGenImage get error =>
+      const LottieGenImage('assets/animations/error.json');
+
+  /// File path: assets/animations/success.json
+  LottieGenImage get success =>
+      const LottieGenImage('assets/animations/success.json');
+
+  /// File path: assets/animations/walking_dog.json
+  LottieGenImage get walkingDog =>
+      const LottieGenImage('assets/animations/walking_dog.json');
 
   /// Directory path: assets/animations
   String get path => 'assets/animations';
 
   /// List of all assets
-  List<LottieGenImage> get values => [arrowDown, arrowDownShort];
+  List<LottieGenImage> get values =>
+      [confetti, empty, error, success, walkingDog];
 }
 
 class $AssetsIconsGen {
@@ -38,8 +51,8 @@ class $AssetsIconsGen {
   SvgGenImage get appleLight =>
       const SvgGenImage('assets/icons/apple_light.svg');
 
-  /// File path: assets/icons/chat.svg
-  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
+  /// File path: assets/icons/chats.svg
+  SvgGenImage get chats => const SvgGenImage('assets/icons/chats.svg');
 
   /// File path: assets/icons/dog.svg
   SvgGenImage get dog => const SvgGenImage('assets/icons/dog.svg');
@@ -62,7 +75,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [appleLight, chat, dog, google, googleLight, paw, send];
+      [appleLight, chats, dog, google, googleLight, paw, send];
 }
 
 class $AssetsImagesGen {
@@ -80,11 +93,27 @@ class $AssetsImagesGen {
   AssetGenImage get arrowDownSmall =>
       const AssetGenImage('assets/images/arrow_down_small.gif');
 
+  /// File path: assets/images/dog_girl_welcome.jpg
+  AssetGenImage get dogGirlWelcome =>
+      const AssetGenImage('assets/images/dog_girl_welcome.jpg');
+
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
+  /// File path: assets/images/loading_paw.gif
+  AssetGenImage get loadingPaw =>
+      const AssetGenImage('assets/images/loading_paw.gif');
+
+  /// File path: assets/images/loading_paws.gif
+  AssetGenImage get loadingPaws =>
+      const AssetGenImage('assets/images/loading_paws.gif');
+
   /// File path: assets/images/nope.png
   AssetGenImage get nope => const AssetGenImage('assets/images/nope.png');
+
+  /// File path: assets/images/onboarding_welcome.png
+  AssetGenImage get onboardingWelcome =>
+      const AssetGenImage('assets/images/onboarding_welcome.png');
 
   /// File path: assets/images/toro.jpeg
   AssetGenImage get toro => const AssetGenImage('assets/images/toro.jpeg');
@@ -101,8 +130,12 @@ class $AssetsImagesGen {
         arrowDown,
         arrowDownDouble,
         arrowDownSmall,
+        dogGirlWelcome,
         like,
+        loadingPaw,
+        loadingPaws,
         nope,
+        onboardingWelcome,
         toro,
         welcomeHeader
       ];

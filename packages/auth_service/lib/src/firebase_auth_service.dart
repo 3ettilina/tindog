@@ -20,7 +20,13 @@ class FirebaseAuthService implements AuthService {
   @override
   Future<String?> googleSignIn() async {
     try {
-      final auth = await _auth.signInWithProvider(GoogleAuthProvider());
+      final googleUser = await GoogleSignIn().signIn();
+      final googleAuth = await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      final auth = await _auth.signInWithCredential(credential);
       return auth.user?.uid;
     } catch (e) {
       return null;
@@ -28,7 +34,12 @@ class FirebaseAuthService implements AuthService {
   }
 
   @override
-  Future<String?> currentUser() async {
+  Future<String?> currentUserId() async {
     return _auth.currentUser?.uid;
+  }
+  
+  @override
+  Future<void> signOut() {
+    return _auth.signOut();
   }
 }

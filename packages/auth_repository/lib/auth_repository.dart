@@ -9,8 +9,8 @@ class AuthRepository {
 
   final AuthService _authService;
 
-  Future<String?> currentUser() async {
-    return _authService.currentUser();
+  Future<String?> currentUserId() async {
+    return _authService.currentUserId();
   }
 
   Future<String?> signInWithGoogle() async {
@@ -19,5 +19,9 @@ class AuthRepository {
 
   Future<String?> signInWithApple() async {
     return _authService.appleSignIn();
+  }
+
+  Future<void> signOut() async {
+    return _authService.signOut();
   }
 }

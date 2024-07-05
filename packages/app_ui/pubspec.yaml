@@ -7,11 +7,13 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
+  chips_choice: ^3.0.1
   flutter:
     sdk: flutter
   flutter_card_swiper: ^7.0.1
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
+  image_picker: ^0.8.9
   lottie: ^3.1.2
   vector_graphics: ^1.1.11+1
 
