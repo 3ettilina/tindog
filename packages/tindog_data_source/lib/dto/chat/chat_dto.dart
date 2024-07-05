@@ -12,6 +12,7 @@ class ChatDto extends Equatable {
     required this.initialMessage,
     required this.lastMessage,
     required this.userIds,
+    required this.updatedAt,
   });
 
   factory ChatDto.fromJson(Map<String, dynamic> json) =>
@@ -24,6 +25,7 @@ class ChatDto extends Equatable {
   final InitialMessageChatDto initialMessage;
   final UserMessageChatDto lastMessage;
   final List<String> userIds;
+  final DateTime updatedAt;
 
   @override
   List<Object?> get props => [
@@ -32,5 +34,6 @@ class ChatDto extends Equatable {
         initialMessage,
         lastMessage,
         userIds,
+        updatedAt,
       ];
 }

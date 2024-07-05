@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:tindog/chats/view/chats_view.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({
@@ -16,6 +17,7 @@ class ChatsPage extends StatelessWidget {
     return Column(
       children: [
         AppHeader(label: label),
+        const ChatsView(),
       ],
     );
   }

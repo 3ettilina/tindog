@@ -21,6 +21,7 @@ ChatDto _$ChatDtoFromJson(Map<String, dynamic> json) => ChatDto(
           json['lastMessage'] as Map<String, dynamic>),
       userIds:
           (json['userIds'] as List<dynamic>).map((e) => e as String).toList(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$ChatDtoToJson(ChatDto instance) => <String, dynamic>{
@@ -29,4 +30,5 @@ Map<String, dynamic> _$ChatDtoToJson(ChatDto instance) => <String, dynamic>{
       'initialMessage': instance.initialMessage.toJson(),
       'lastMessage': instance.lastMessage.toJson(),
       'userIds': instance.userIds,
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

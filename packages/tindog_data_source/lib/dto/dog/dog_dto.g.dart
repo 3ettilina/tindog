@@ -28,7 +28,6 @@ DogDto _$DogDtoFromJson(Map<String, dynamic> json) => DogDto(
     );
 
 Map<String, dynamic> _$DogDtoToJson(DogDto instance) => <String, dynamic>{
-      'id': instance.id,
       'name': instance.name,
       'breed': instance.breed,
       'gender': instance.gender,

@@ -146,4 +146,9 @@ class TindogRepository {
       return ErrorLikingDog();
     }
   }
+
+  Future<List<Chat>> fetchChats() async {
+    // TODO(3ettilina): Call data source
+    throw UnimplementedError();
+  }
 }

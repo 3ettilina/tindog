@@ -1,4 +1,4 @@
-export '../responses/analyze_dog_details_response.dart';
+export 'chat/chat.dart';
 export 'dog.dart';
 export 'dog_age.dart';
 export 'dog_gender.dart';

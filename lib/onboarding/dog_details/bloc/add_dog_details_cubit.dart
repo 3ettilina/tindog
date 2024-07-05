@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/extensions/string_extensions.dart';
 import 'package:tindog_repository/tindog_repository.dart';

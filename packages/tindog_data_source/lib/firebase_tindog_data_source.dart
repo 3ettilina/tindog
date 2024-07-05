@@ -165,19 +165,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
   @override
   Stream<List<ChatDto>> fetchChats({required String userId}) {
     try {
-      final chatTransformer =
-          StreamTransformer<QuerySnapshot<ChatDto>, List<ChatDto>>.fromHandlers(
-              handleData: (chatSnapshot, sink) {
-        final outputChats =
-            chatSnapshot.docs.map((chat) => chat.data()).toList();
-        sink.add(outputChats);
-      });
-      final chats = _chatsCollection
-          .where('userIds', arrayContains: userId)
-          .orderBy('updatedAt')
-          .snapshots()
-          .transform(chatTransformer);
-      return chats;
+      // TODO(3ettilina): Implement this during the Workshop
+      throw UnimplementedError();
     } catch (e) {
       throw UnableToFetchChatsException(message: e.toString());
     }
@@ -196,7 +185,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
       _dogs = dogSnapshots.map((snapshot) {
         final dogsDtoNotMine = snapshot.docs.where((doc) => doc.id != myDogId);
         final dogs = dogsDtoNotMine.map((dogDto) => dogDto.data());
-        final dogsNotSeen = dogs.where((dog) => !(_seenDogs.contains(dog.id))).toList();
+        final dogsNotSeen =
+            dogs.where((dog) => !(_seenDogs.contains(dog.id))).toList();
         return dogsNotSeen;
       });
     } catch (e) {
@@ -268,7 +258,7 @@ class FirebaseTindogDataSource implements TindogDataSource {
           _dogsCollection.where('userId', isEqualTo: userId).snapshots();
       _myDog = dogSnapshot.map((snapshot) {
         final result = snapshot.docs.map((doc) => doc.data()).toList().first;
-        
+
         _seenDogs.clear();
         _seenDogs.addAll(result.seen);
 
