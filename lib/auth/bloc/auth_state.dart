@@ -7,13 +7,13 @@ sealed class AuthState extends Equatable {
         final Authenticated auth => auth.dog,
         _ => null,
       };
+
+  @override
+  List<Object?> get props => [];
 }
 
 class CheckingAuthentication extends AuthState {
   const CheckingAuthentication();
-  
-  @override
-  List<Object?> get props => [];
 }
 
 class Authenticated extends AuthState {
@@ -28,14 +28,15 @@ class Authenticated extends AuthState {
   final Dog? dog;
 
   @override
-  List<Object?> get props => [id, isNewUser, dog,];
+  List<Object?> get props => [
+        id,
+        isNewUser,
+        dog,
+      ];
 }
 
 class Unauthenticated extends AuthState {
   const Unauthenticated();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class AuthenticationError extends AuthState {
@@ -45,4 +46,23 @@ class AuthenticationError extends AuthState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class UnauthenticatedError extends AuthState {
+  const UnauthenticatedError({
+    required this.id,
+    required this.isNewUser,
+    this.dog,
+  });
+
+  final String id;
+  final bool isNewUser;
+  final Dog? dog;
+
+  @override
+  List<Object?> get props => [
+        id,
+        isNewUser,
+        dog,
+      ];
 }

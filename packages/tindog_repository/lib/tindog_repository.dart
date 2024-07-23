@@ -38,7 +38,7 @@ class TindogRepository {
   }) async {
     try {
       final analyzeDogResult = await _dataSource.analyzeDog(image: dogImage);
-      final user = await _authRepository.currentUserId();
+      final user = await _authRepository.currentUserId;
       final output = AnalyzeDogDetails(
         id: analyzeDogResult.id,
         imagePath: analyzeDogResult.filePath,
@@ -66,7 +66,7 @@ class TindogRepository {
     required Dog dog,
   }) async {
     try {
-      final user = await _authRepository.currentUserId();
+      final user = await _authRepository.currentUserId;
       final dto = DogDto(
         id: dog.id,
         name: dog.name,

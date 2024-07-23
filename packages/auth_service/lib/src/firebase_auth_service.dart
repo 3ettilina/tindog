@@ -1,11 +1,28 @@
-part of 'auth_service.dart';
+part of 'auth_service_contract.dart';
 
-/// Authentication Service of Firebase
-class FirebaseAuthService implements AuthService {
+/// Authentication Service that uses Firebase Auth
+class FirebaseAuthService implements AuthServiceContract {
   /// FirebaseAuthService constructor
-  FirebaseAuthService() : _auth = FirebaseAuth.instance;
+  FirebaseAuthService({
+    FirebaseAuth? firebaseAuth,
+    GoogleSignIn? googleSignIn,
+  })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   final FirebaseAuth _auth;
+  final GoogleSignIn _googleSignIn;
+
+  @override
+  Stream<String?> get userId {
+    return _auth.authStateChanges().map((firebaseUser) {
+      return firebaseUser?.uid;
+    });
+  }
+
+  @override
+  Future<String?> get currentUserId async {
+    return _auth.currentUser?.uid;
+  }
 
   @override
   Future<String?> appleSignIn() async {
@@ -13,14 +30,14 @@ class FirebaseAuthService implements AuthService {
       final auth = await _auth.signInWithProvider(AppleAuthProvider());
       return auth.user?.email;
     } catch (e) {
-      return null;
+      throw const LogInWithAppleException('Google Sign In Failure');
     }
   }
 
   @override
   Future<String?> googleSignIn() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      final googleUser = await _googleSignIn.signIn();
       final googleAuth = await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
@@ -29,17 +46,19 @@ class FirebaseAuthService implements AuthService {
       final auth = await _auth.signInWithCredential(credential);
       return auth.user?.uid;
     } catch (e) {
-      return null;
+      throw const LogInWithGoogleException('Google Sign In Failure');
     }
   }
 
   @override
-  Future<String?> currentUserId() async {
-    return _auth.currentUser?.uid;
-  }
-  
-  @override
-  Future<void> signOut() {
-    return _auth.signOut();
+  Future<void> signOut() async {
+    try {
+      await Future.wait([
+        _auth.signOut(),
+        _googleSignIn.signOut(),
+      ]);
+    } catch (e) {
+      throw const LogOutException('Log Out Failure');
+    }
   }
 }

@@ -16,28 +16,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   })  : _authRepository = authRepository,
         _tindogRepository = tindogRepository,
         super(const CheckingAuthentication()) {
-    on<CheckAuth>(_checkingAuth);
+    on<_UserChanged>(_userChanged);
     on<LogIn>(_logIn);
     on<LogOut>(_logOut);
     on<UpdateUserDetails>(_onUserUpdate);
-    add(CheckAuth());
+
+    _userSubscription = _authRepository.userId.listen((userId) {
+      add(_UserChanged(userId));
+    });
   }
 
   final AuthRepository _authRepository;
   final TindogRepository _tindogRepository;
 
-  StreamSubscription<Dog?>? _myDog;
+  late final StreamSubscription<String?> _userSubscription;
+  late final StreamSubscription<Dog?> _myDogSubscription;
 
-  Future<void> _checkingAuth(
-    CheckAuth event,
+  Future<void> _userChanged(
+    _UserChanged event,
     Emitter<AuthState> emit,
   ) async {
-    final userId = await _authRepository.currentUserId();
+    final userId = event.userId;
     if (userId != null) {
       await _tindogRepository.checkUserHasDog(userId: userId);
 
-      _myDog?.cancel();
-      _myDog = _tindogRepository.myDog.listen(
+      _myDogSubscription.cancel();
+      _myDogSubscription = _tindogRepository.myDog.listen(
         (dog) => add(
           UpdateUserDetails(
             dog: dog,
@@ -72,8 +76,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final userId = await _authRepository.signInWithGoogle();
     if (userId != null) {
       await _tindogRepository.checkUserHasDog(userId: userId);
-      _myDog?.cancel();
-      _myDog = _tindogRepository.myDog.listen(
+      _myDogSubscription.cancel();
+      _myDogSubscription = _tindogRepository.myDog.listen(
         (dog) => add(
           UpdateUserDetails(
             dog: dog,
@@ -84,10 +88,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         onError: (e) {
           // Fallback for when there's no Dog on the Stream
           add(UpdateUserDetails(userId: userId, isNewUser: true));
-        }
+        },
       );
     } else {
-      emit(const AuthenticationError('Something went wrong while authenticating'));
+      emit(const AuthenticationError(
+        'Something went wrong while authenticating',
+      ));
     }
   }
 
@@ -95,7 +101,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogOut event,
     Emitter<AuthState> emit,
   ) async {
-    await _authRepository.signOut();
-    emit(const Unauthenticated());
+    final currentState = state as Authenticated;
+    try {
+      await _authRepository.signOut();
+      emit(const Unauthenticated());
+    } catch (_) {
+      emit(
+        UnauthenticatedError(
+          id: currentState.id,
+          isNewUser: currentState.isNewUser,
+          dog: currentState.dog,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _myDogSubscription.cancel();
+    _userSubscription.cancel();
+    return super.close();
   }
 }

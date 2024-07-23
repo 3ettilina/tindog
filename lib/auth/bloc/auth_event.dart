@@ -4,7 +4,11 @@ sealed class AuthEvent {
   const AuthEvent();
 }
 
-class CheckAuth extends AuthEvent {}
+class _UserChanged extends AuthEvent {
+  const _UserChanged(this.userId);
+
+  final String? userId;
+}
 
 class UpdateUserDetails extends AuthEvent {
   const UpdateUserDetails({
