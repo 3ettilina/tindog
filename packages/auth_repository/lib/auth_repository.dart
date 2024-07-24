@@ -4,13 +4,15 @@ export 'package:auth_repository/auth_repository.dart';
 
 class AuthRepository {
   AuthRepository({
-    AuthService? authService,
+    AuthServiceContract? authService,
   }) : _authService = authService ?? FirebaseAuthService();
 
-  final AuthService _authService;
+  final AuthServiceContract _authService;
 
-  Future<String?> currentUserId() async {
-    return _authService.currentUserId();
+  Stream<String?> get userId => _authService.userId;
+
+  Future<String?> get currentUserId async {
+    return _authService.currentUserId;
   }
 
   Future<String?> signInWithGoogle() async {

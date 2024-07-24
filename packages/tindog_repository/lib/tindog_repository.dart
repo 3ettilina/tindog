@@ -38,7 +38,7 @@ class TindogRepository {
   }) async {
     try {
       final analyzeDogResult = await _dataSource.analyzeDog(image: dogImage);
-      final user = await _authRepository.currentUserId();
+      final user = await _authRepository.currentUserId;
       final output = AnalyzeDogDetails(
         id: analyzeDogResult.id,
         imagePath: analyzeDogResult.filePath,
@@ -66,7 +66,7 @@ class TindogRepository {
     required Dog dog,
   }) async {
     try {
-      final user = await _authRepository.currentUserId();
+      final user = await _authRepository.currentUserId;
       final dto = DogDto(
         id: dog.id,
         name: dog.name,
@@ -89,9 +89,11 @@ class TindogRepository {
     }
   }
 
-  Future<void> fetchDogs({required Dog myDog}) async {
+  Future<void> fetchDogs() async {
     try {
-      await _dataSource.fetchDogs(myDogId: myDog.id);
+      final myDog = await myDogSync;
+      final dto = myDog!.dto;
+      await _dataSource.fetchDogs(myDog: dto);
       _dogs = _dataSource.dogs.map((streamDto) {
         final dogs = streamDto.map((dogDto) => dogDto.dog).toList();
         return dogs;

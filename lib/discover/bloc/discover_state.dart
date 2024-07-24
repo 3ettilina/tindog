@@ -21,23 +21,6 @@ class DiscoverReadyState extends DiscoverState {
   List<Object?> get props => [dogs, swiperController];
 }
 
-class DiscoverDogsDidMatchState extends DiscoverState {
-  const DiscoverDogsDidMatchState({
-    required this.myDog,
-    required this.likedDog,
-    required this.dogs, 
-    this.swiperController,
-    });
-
-  final Dog myDog;
-  final Dog likedDog;
-  final List<Dog> dogs;
-  final AppCardSwiperController? swiperController;
-
-  @override
-  List<Object?> get props => [myDog, likedDog, dogs, swiperController];
-}
-
 class DiscoverErrorFetchingDogsState extends DiscoverState {
   const DiscoverErrorFetchingDogsState(this.message);
 

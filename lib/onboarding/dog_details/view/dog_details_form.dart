@@ -51,7 +51,7 @@ class DogDetailsForm extends StatelessWidget {
                   flex: 3,
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'What\'s its age?',
+                      labelText: 'Its age?',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
@@ -64,7 +64,6 @@ class DogDetailsForm extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: AppChoiceChips<AgeUnit>.singleOption(
-                    defaultSingleValue: state.age!.unit,
                     options: const [AgeUnit.months, AgeUnit.years],
                     onValueSelected: (unit) {
                       cubit.setDogAge(unit: unit);
@@ -82,7 +81,8 @@ class DogDetailsForm extends StatelessWidget {
             ),
             AppChoiceChips<DogSize>.singleOption(
               defaultSingleValue: state.size,
-              options: List.from([DogSize.small, DogSize.medium, DogSize.large]),
+              options:
+                  List.from([DogSize.small, DogSize.medium, DogSize.large]),
               onValueSelected: cubit.setDogSize,
             ),
             const SizedBox(height: 20),
@@ -91,7 +91,6 @@ class DogDetailsForm extends StatelessWidget {
               style: context.textTheme.bodyMedium,
             ),
             AppChoiceChips<bool>.singleOption(
-              defaultSingleValue: true,
               options: const [true, false],
               onValueSelected: cubit.setDogNeutered,
             ),

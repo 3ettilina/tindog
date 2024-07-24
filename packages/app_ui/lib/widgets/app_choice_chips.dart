@@ -47,7 +47,7 @@ class _AppChoiceChipsState<T> extends State<AppChoiceChips<T>> {
     switch (widget._type) {
       case _AppChoiceChipsType.single:
         selected = (widget.defaultSingleValue != null)
-            ? List.of(widget.defaultMultipleValue)
+            ? [widget.defaultSingleValue as T]
             : [];
         setState(() {});
       case _AppChoiceChipsType.multiple:
