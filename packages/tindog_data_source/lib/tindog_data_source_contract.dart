@@ -41,7 +41,7 @@ abstract class TindogDataSource {
 
   /// Collects all dogs and adds it to a stream for easy consumption and update.
   Future<void> fetchDogs({
-    required String myDogId,
+    required DogDto myDog,
     String? city,
     String? country,
     List<String>? interests,
@@ -83,11 +83,6 @@ abstract class TindogDataSource {
   /// owner of the dog
   Stream<List<ChatDto>> fetchChats({
     required String userId,
-  });
-
-  /// Returns the details of the Dog to show up in a profile screen.
-  Future<DogDto> getDogDetails({
-    required String dogId,
   });
 
   /// Sends a message into a specified chat.

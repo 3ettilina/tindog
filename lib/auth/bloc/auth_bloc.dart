@@ -30,7 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final TindogRepository _tindogRepository;
 
   late final StreamSubscription<String?> _userSubscription;
-  late final StreamSubscription<Dog?> _myDogSubscription;
+  StreamSubscription<Dog?>? _myDogSubscription;
 
   Future<void> _userChanged(
     _UserChanged event,
@@ -40,7 +40,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (userId != null) {
       await _tindogRepository.checkUserHasDog(userId: userId);
 
-      _myDogSubscription.cancel();
       _myDogSubscription = _tindogRepository.myDog.listen(
         (dog) => add(
           UpdateUserDetails(
@@ -49,7 +48,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             isNewUser: dog == null,
           ),
         ),
-        onError: (e) => add(LogOut()),
       );
     } else {
       emit(const Unauthenticated());
@@ -76,7 +74,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final userId = await _authRepository.signInWithGoogle();
     if (userId != null) {
       await _tindogRepository.checkUserHasDog(userId: userId);
-      _myDogSubscription.cancel();
       _myDogSubscription = _tindogRepository.myDog.listen(
         (dog) => add(
           UpdateUserDetails(
@@ -118,7 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Future<void> close() {
-    _myDogSubscription.cancel();
+    _myDogSubscription?.cancel();
     _userSubscription.cancel();
     return super.close();
   }

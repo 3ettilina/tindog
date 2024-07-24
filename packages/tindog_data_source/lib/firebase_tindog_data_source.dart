@@ -11,8 +11,6 @@ import 'package:tindog_data_source/tindog_data_source.dart';
 import 'package:tindog_data_source/tindog_data_source_contract.dart';
 
 const _dogImagesStoragePath = 'dogs';
-const _baseStorageUrl =
-    'https://storage.googleapis.com/tindog-4edd4.appspot.com';
 
 class FirebaseTindogDataSource implements TindogDataSource {
   FirebaseTindogDataSource({
@@ -22,9 +20,14 @@ class FirebaseTindogDataSource implements TindogDataSource {
     FirebaseFunctions? functions,
   })  : _dogsCollection = dogsCollection ??
             FirebaseFirestore.instance.collection('dogs').withConverter(
-                  fromFirestore: (docSnapshot, _) => DogDto.fromJson(
-                    docSnapshot.data()!,
-                  ),
+                  fromFirestore: (docSnapshot, _) {
+                    final dogJson = docSnapshot.data()!;
+                    dogJson.addAll({
+                      'id': docSnapshot.id,
+                    });
+                    print(dogJson);
+                    return DogDto.fromJson(dogJson);
+                  },
                   toFirestore: (dogDto, _) => dogDto.toJson(),
                 ),
         _chatsCollection = chatsCollection ??
@@ -65,7 +68,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
     try {
       final newDog = _dogsCollection.doc();
       final imageStoragePath = '$_dogImagesStoragePath/${newDog.id}.jpeg';
-      await _storage.ref().child(imageStoragePath).putFile(image);
+      final storageRef = _storage.ref().child(imageStoragePath);
+      await storageRef.putFile(image);
 
       final analyzeDogResult =
           await _functions.httpsCallable('dogDataFlow').call({
@@ -79,7 +83,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
           message: 'We could not identify the dog in your image',
         );
       }
-      final dogImageUrl = '$_baseStorageUrl/$imageStoragePath';
+
+      final dogImageUrl = await storageRef.getDownloadURL();
       analyzeDogData.addAll({'filePath': dogImageUrl, 'id': newDog.id});
       final analyzeDog = AnalyzedDogDto.fromJson(analyzeDogData);
       return analyzeDog;
@@ -127,20 +132,21 @@ class FirebaseTindogDataSource implements TindogDataSource {
     required DogDto dogToLike,
   }) async {
     try {
+      _seenDogs.add(dogToLike.id);
       final dogRef = _dogsCollection.doc(myDog.id);
 
       await dogRef.update({
         'likes': FieldValue.arrayUnion([dogToLike.id]),
         'seen': FieldValue.arrayUnion([dogToLike.id]),
       });
-      _seenDogs.add(dogToLike.id);
       final dogsDidMatch = hasMatch(myDog: myDog, likedDog: dogToLike);
-      createChatForDogs(myDogId: myDog.id, likedDogId: dogToLike.id);
+      if (dogsDidMatch) {
+        createChatForDogs(myDogId: myDog.id, likedDogId: dogToLike.id);
+      }
       return dogsDidMatch;
-    } on UnableToCreateChatException catch (e) {
-      throw UnableToCreateChatException(message: e.message);
+    } on UnableToCreateChatException catch (_) {
+      rethrow;
     } catch (e) {
-      _seenDogs.remove(dogToLike.id);
       throw UnableToLikeDogException(message: e.toString());
     }
   }
@@ -151,8 +157,8 @@ class FirebaseTindogDataSource implements TindogDataSource {
     required DogDto dogToDislike,
   }) async {
     try {
-      final dogRef = _dogsCollection.doc(myDog.id);
       _seenDogs.add(dogToDislike.id);
+      final dogRef = _dogsCollection.doc(myDog.id);
       await dogRef.update({
         'seen': FieldValue.arrayUnion([dogToDislike.id]),
       });
@@ -174,7 +180,7 @@ class FirebaseTindogDataSource implements TindogDataSource {
 
   @override
   Future<void> fetchDogs({
-    required String myDogId,
+    required DogDto myDog,
     String? city,
     String? country,
     List<String>? interests,
@@ -183,7 +189,7 @@ class FirebaseTindogDataSource implements TindogDataSource {
       final Stream<QuerySnapshot<DogDto>> dogSnapshots =
           _dogsCollection.orderBy('name').snapshots();
       _dogs = dogSnapshots.map((snapshot) {
-        final dogsDtoNotMine = snapshot.docs.where((doc) => doc.id != myDogId);
+        final dogsDtoNotMine = snapshot.docs.where((doc) => doc.id != myDog.id);
         final dogs = dogsDtoNotMine.map((dogDto) => dogDto.data());
         final dogsNotSeen =
             dogs.where((dog) => !(_seenDogs.contains(dog.id))).toList();
@@ -217,18 +223,6 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }
 
   @override
-  Future<DogDto> getDogDetails({required String dogId}) async {
-    try {
-      final dogRef = await _dogsCollection.doc(dogId).get();
-      final dog = dogRef.data()!;
-      _seenDogs.addAll(dog.seen);
-      return dog;
-    } catch (e) {
-      throw UnableToGetDogDetailsException(message: e.toString());
-    }
-  }
-
-  @override
   Future<void> sendChatMessage({
     required String chatId,
     required String senderId,
@@ -257,12 +251,15 @@ class FirebaseTindogDataSource implements TindogDataSource {
       final Stream<QuerySnapshot<DogDto>> dogSnapshot =
           _dogsCollection.where('userId', isEqualTo: userId).snapshots();
       _myDog = dogSnapshot.map((snapshot) {
-        final result = snapshot.docs.map((doc) => doc.data()).toList().first;
+        if (snapshot.docs.isNotEmpty) {
+          final result = snapshot.docs.map((doc) => doc.data()).toList().first;
 
-        _seenDogs.clear();
-        _seenDogs.addAll(result.seen);
+          _seenDogs.clear();
+          _seenDogs.addAll(result.seen);
 
-        return result;
+          return result;
+        }
+        return null;
       });
     } catch (e) {
       return;

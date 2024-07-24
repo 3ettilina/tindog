@@ -89,9 +89,11 @@ class TindogRepository {
     }
   }
 
-  Future<void> fetchDogs({required Dog myDog}) async {
+  Future<void> fetchDogs() async {
     try {
-      await _dataSource.fetchDogs(myDogId: myDog.id);
+      final myDog = await myDogSync;
+      final dto = myDog!.dto;
+      await _dataSource.fetchDogs(myDog: dto);
       _dogs = _dataSource.dogs.map((streamDto) {
         final dogs = streamDto.map((dogDto) => dogDto.dog).toList();
         return dogs;

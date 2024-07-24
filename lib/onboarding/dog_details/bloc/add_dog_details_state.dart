@@ -30,6 +30,7 @@ sealed class AddDogDetailsState extends Equatable {
   bool get isValid =>
       name.isNotNullOrEmpty &&
       gender != null &&
+      size != null &&
       breed.isNotNullOrEmpty &&
       age != null &&
       description.isNotNullOrEmpty &&
@@ -42,6 +43,7 @@ sealed class AddDogDetailsState extends Equatable {
         imagePath,
         name,
         gender,
+        size,
         breed,
         age,
         isNeutered,
