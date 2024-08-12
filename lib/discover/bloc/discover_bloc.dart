@@ -27,7 +27,6 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
     FetchDogs event,
     Emitter<DiscoverState> emit,
   ) async {
-    //emit(const DiscoverFetchingDogsState());
     await _repository.fetchDogs();
 
     _dogsSubscription?.cancel();

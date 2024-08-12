@@ -124,19 +124,14 @@ class _Interests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      direction: Axis.horizontal,
       children: interests
           .map(
             (i) => Card(
               margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 2,
-                ),
-                child: Text(
-                  i,
-                  style: context.textTheme.labelSmall,
-                ),
+              child: Text(
+                i,
+                style: context.textTheme.labelSmall,
               ),
             ),
           )

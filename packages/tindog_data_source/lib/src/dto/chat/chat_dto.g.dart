@@ -17,18 +17,21 @@ ChatDto _$ChatDtoFromJson(Map<String, dynamic> json) => ChatDto(
           .toList(),
       initialMessage: InitialMessageChatDto.fromJson(
           json['initialMessage'] as Map<String, dynamic>),
-      lastMessage: UserMessageChatDto.fromJson(
-          json['lastMessage'] as Map<String, dynamic>),
+      lastMessage: json['lastMessage'] == null
+          ? null
+          : UserMessageChatDto.fromJson(
+              json['lastMessage'] as Map<String, dynamic>),
       userIds:
           (json['userIds'] as List<dynamic>).map((e) => e as String).toList(),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      updatedAt:
+          const TimestampConverter().fromJson(json['updatedAt'] as Timestamp),
     );
 
 Map<String, dynamic> _$ChatDtoToJson(ChatDto instance) => <String, dynamic>{
       'messages': instance.messages.map((e) => e.toJson()).toList(),
       'dogs': instance.dogs.map((e) => e.toJson()).toList(),
       'initialMessage': instance.initialMessage.toJson(),
-      'lastMessage': instance.lastMessage.toJson(),
+      'lastMessage': instance.lastMessage?.toJson(),
       'userIds': instance.userIds,
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
     };

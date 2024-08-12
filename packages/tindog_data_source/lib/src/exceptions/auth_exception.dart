@@ -1,4 +1,4 @@
-import 'package:tindog_data_source/exceptions/base_exception.dart';
+import 'package:tindog_data_source/src/exceptions/base_exception.dart';
 
 class UserNotAuthenticatedException extends BaseException {
   UserNotAuthenticatedException({required super.message});

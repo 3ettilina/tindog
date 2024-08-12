@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:tindog_data_source/dto/dog/dog_dto.dart';
+import 'package:tindog_data_source/tindog_data_source.dart';
 
 extension DogDtoX on DogDto {
   Dog get dog => Dog(
@@ -7,7 +7,7 @@ extension DogDtoX on DogDto {
         name: name,
         breed: breed,
         gender: DogGender.fromString(gender),
-        age: Age.fromString(age),
+        age: Age(value: age, unit: AgeUnit.fromString(ageUnit)),
         size: DogSize.fromName(size),
         imagePath: filePath,
         isNeutered: isNeutered,
@@ -25,7 +25,8 @@ extension DogX on Dog {
         name: name,
         breed: breed,
         gender: gender.name,
-        age: age.toString(),
+        age: age.value, 
+        ageUnit: age.unit.name,
         size: size.name,
         isNeutered: isNeutered,
         interests: interests,

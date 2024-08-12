@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
-class AppCircularImage extends StatefulWidget {
+class AppCircularImage extends StatelessWidget {
   const AppCircularImage.file({
     required this.image,
     this.size = 60,
@@ -21,44 +21,31 @@ class AppCircularImage extends StatefulWidget {
   final double size;
 
   @override
-  State<AppCircularImage> createState() => _AppCircularImageState();
-}
-
-class _AppCircularImageState extends State<AppCircularImage> {
-  bool isLoading = true;
-
-  void setLoading(bool inProgress) {
-    setState(() {
-      isLoading = inProgress;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final imageWidget = (widget.image != null)
+    final imageWidget = (image != null)
         ? Image.file(
-            File(widget.image!.path),
-            width: widget.size,
+            File(image!.path),
+            width: size,
             fit: BoxFit.cover,
           )
         : Image.network(
-            widget.url!,
+            url!,
             fit: BoxFit.cover,
             loadingBuilder: (context, child, progress) {
               if (progress == null) {
                 return child;
               }
-              return Assets.images.loadingPaws.image(width: widget.size / 2);
+              return Assets.images.loadingPaws.image(width: size / 2);
             },
           );
     return SizedBox.square(
-      dimension: widget.size,
+      dimension: size,
       child: Card(
         shape: const CircleBorder(),
         clipBehavior: Clip.antiAlias,
         child: ClipRRect(
           clipBehavior: Clip.hardEdge,
-          borderRadius: BorderRadius.circular(widget.size),
+          borderRadius: BorderRadius.circular(size),
           child: imageWidget,
         ),
       ),

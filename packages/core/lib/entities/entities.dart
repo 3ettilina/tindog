@@ -1,6 +1,6 @@
 export 'chat/chat.dart';
-export 'dog.dart';
-export 'dog_age.dart';
-export 'dog_gender.dart';
-export 'dog_interest.dart';
-export 'dog_size.dart';
+export 'dog/dog.dart';
+export 'dog/dog_age.dart';
+export 'dog/dog_gender.dart';
+export 'dog/dog_interest.dart';
+export 'dog/dog_size.dart';

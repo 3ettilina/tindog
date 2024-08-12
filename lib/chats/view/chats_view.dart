@@ -32,16 +32,36 @@ class _ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, index) {
-      final chat = chats[index];
-      return ListTile(
-        leading: AppCircularImage.url(url: chat.otherDog.thumbnailUrl),
-        title: Text(
-          chat.otherDog.name,
-          style: context.textTheme.titleMedium,
-        ),
-        trailing: const Icon(Icons.arrow_forward_outlined),
-      );
-    });
+    return ListView.builder(
+        itemCount: chats.length,
+        itemBuilder: (context, index) {
+          final chat = chats[index];
+          return ListTile(
+            leading: AppCircularImage.url(
+              url: chat.otherDog.thumbnailUrl,
+              size: 70,
+            ),
+            title: Text(
+              chat.otherDog.name,
+              style: context.textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              chat.latestMessage?.text ?? chat.initialChatMessage.text,
+              maxLines: 2,
+              style: context.textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: Column(
+              children: [
+                Text(
+                  '${chat.updatedAt.hour}:${chat.updatedAt.minute}',
+                  style: context.textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 8),
+                const Icon(Icons.chevron_right_outlined),
+              ],
+            ),
+          );
+        });
   }
 }

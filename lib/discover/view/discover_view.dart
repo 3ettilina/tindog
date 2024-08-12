@@ -13,6 +13,8 @@ class DiscoverView extends StatelessWidget {
     return BlocBuilder<DiscoverBloc, DiscoverState>(
       buildWhen: (prev, curr) {
         if (prev is DiscoverReadyState && curr is DiscoverReadyState) {
+          return true;
+
           /// Re-build if we have new dogs to show on the swiper
           return curr.dogs.length > prev.dogs.length;
         }

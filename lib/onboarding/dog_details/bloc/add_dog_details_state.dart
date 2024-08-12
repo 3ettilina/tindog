@@ -9,7 +9,7 @@ sealed class AddDogDetailsState extends Equatable {
     this.description,
     this.gender,
     this.name,
-    this.age = const Age(unit: AgeUnit.years),
+    this.age = const Age.years(value: 0),
     this.isNeutered = true,
     this.interests = const [],
     this.userId,
@@ -111,7 +111,7 @@ class DogDetailsSubmitting extends AddDogDetailsState {
     required super.userId,
     super.gender,
     super.name,
-    super.age = const Age(unit: AgeUnit.years),
+    super.age = const Age.years(value: 0),
     super.isNeutered = true,
     super.interests = const [],
   });

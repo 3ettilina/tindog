@@ -23,5 +23,7 @@ class ChatsReady extends ChatsState {
 }
 
 class ChatsError extends ChatsState {
-  const ChatsError();
+  const ChatsError(this.message);
+
+  final String message;
 }
