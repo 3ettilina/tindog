@@ -15,7 +15,7 @@ class AuthPage extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: Assets.images.onboardingWelcome.image(
+              child: Assets.images.welcomeDogs.image(
                 fit: BoxFit.cover,
                 width: MediaQuery.sizeOf(context).width,
               ),

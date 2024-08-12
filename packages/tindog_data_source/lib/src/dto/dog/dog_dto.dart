@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dog_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DogDto extends Equatable {
   const DogDto({
     required this.id,
@@ -11,6 +11,7 @@ class DogDto extends Equatable {
     required this.breed,
     required this.gender,
     required this.age,
+    required this.ageUnit,
     required this.size,
     required this.filePath,
     required this.isNeutered,
@@ -30,7 +31,8 @@ class DogDto extends Equatable {
     final name = firebaseJson['name'] as String;
     final breed = firebaseJson['breed'] as String;
     final gender = firebaseJson['gender'] as String;
-    final age = firebaseJson['age'] as String;
+    final age = firebaseJson['age'] as int;
+    final ageUnit = firebaseJson['ageUnit'] as String;
     final size = firebaseJson['size'] as String;
     final filePath = firebaseJson['filePath'] as String;
     final isNeutered = firebaseJson['isNeutered'] as bool;
@@ -46,6 +48,7 @@ class DogDto extends Equatable {
       breed: breed,
       gender: gender,
       age: age,
+      ageUnit: ageUnit,
       size: size,
       filePath: filePath,
       isNeutered: isNeutered,
@@ -60,7 +63,8 @@ class DogDto extends Equatable {
   final String name;
   final String breed;
   final String gender;
-  final String age;
+  final int age;
+  final String ageUnit;
   final String size;
   final String filePath;
   final bool isNeutered;

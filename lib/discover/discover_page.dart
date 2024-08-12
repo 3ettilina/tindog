@@ -62,8 +62,8 @@ class DogsDidMatchListener extends StatelessWidget {
               likedDogName: st.likedDog.name,
               likedDogImageUrl: st.likedDog.imagePath,
               onPrimaryTap: () {
-                context.goNamed('chats');
                 context.pop();
+                context.goNamed('chats');
               },
               onSecondaryTap: () {
                 context.pop();

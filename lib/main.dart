@@ -71,11 +71,14 @@ class MainProviders extends StatelessWidget {
             create: (_) => ChatsBloc(repo: tindogRepo),
           )
         ],
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: routes,
-          title: 'TinDog',
-          theme: AppTheme.light,
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: routes,
+            title: 'TinDog',
+            theme: AppTheme.light,
+          ),
         ),
       ),
     );

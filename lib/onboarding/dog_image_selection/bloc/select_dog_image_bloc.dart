@@ -20,14 +20,10 @@ class SelectDogImageBloc
     on<RequestGalleryPermission>(_onRequestGalleryPermission);
     on<SelectDogImage>(_onSelectDogImage);
 
-    add(const CheckGalleryPermission());
-
-    /**
-        Permission.photos
+    Permission.photos
         .onGrantedCallback(() => add(const CheckGalleryPermission()))
         .onPermanentlyDeniedCallback(
-        () => add(const RequestGalleryPermission()));
-     **/
+            () => add(const RequestGalleryPermission()));
   }
 
   final TindogRepository _repository;
@@ -36,16 +32,15 @@ class SelectDogImageBloc
     CheckGalleryPermission event,
     Emitter<SelectDogImageState> emit,
   ) async {
-    await Permission.photos.request().then((status) {
+    await Permission.photos.status.then((status) {
       switch (status) {
         case PermissionStatus.denied:
+        case PermissionStatus.restricted:
+        case PermissionStatus.permanentlyDenied:
           emit(const SelectDogImageNeedsGalleryPermissionsState());
         case PermissionStatus.granted:
         case PermissionStatus.limited:
         case PermissionStatus.provisional:
-          emit(const SelectDogImagePermissionGrantedState());
-        case PermissionStatus.restricted:
-        case PermissionStatus.permanentlyDenied:
           emit(const SelectDogImagePermissionGrantedState());
       }
     });

@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tindog_data_source/dto/dto.dart';
+import 'package:tindog_data_source/src/dto/dto.dart';
+import 'package:tindog_data_source/src/dto/timestamp_converter.dart';
 
 part 'chat_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+@TimestampConverter()
 class ChatDto extends Equatable {
   const ChatDto({
     this.messages = const <UserMessageChatDto>[],
@@ -23,7 +26,7 @@ class ChatDto extends Equatable {
   final List<UserMessageChatDto> messages;
   final List<DogChatDto> dogs;
   final InitialMessageChatDto initialMessage;
-  final UserMessageChatDto lastMessage;
+  final UserMessageChatDto? lastMessage;
   final List<String> userIds;
   final DateTime updatedAt;
 

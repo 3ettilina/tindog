@@ -5,10 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tindog_data_source/dto/dto.dart';
-import 'package:tindog_data_source/exceptions/exceptions.dart';
 import 'package:tindog_data_source/tindog_data_source.dart';
-import 'package:tindog_data_source/tindog_data_source_contract.dart';
 
 const _dogImagesStoragePath = 'dogs';
 
@@ -171,8 +168,13 @@ class FirebaseTindogDataSource implements TindogDataSource {
   @override
   Stream<List<ChatDto>> fetchChats({required String userId}) {
     try {
-      // TODO(3ettilina): Implement this during the Workshop
-      throw UnimplementedError();
+      return _chatsCollection
+          .where('userIds', arrayContains: userId)
+          .orderBy('updatedAt')
+          .snapshots()
+          .map((snap) {
+        return snap.docs.map((doc) => doc.data()).toList();
+      });
     } catch (e) {
       throw UnableToFetchChatsException(message: e.toString());
     }
@@ -229,14 +231,14 @@ class FirebaseTindogDataSource implements TindogDataSource {
     required String text,
   }) async {
     try {
-      final newMessage = UserMessageChatDto(
-        timestamp: DateTime.now(),
-        text: text,
-        isRead: false,
-        userId: senderId,
-      );
       final chatRef = _chatsCollection.doc(chatId);
-      chatRef.collection('messages').add(newMessage.toJson());
+    
+      chatRef.collection('messages').add({
+        'timestamp': FieldValue.serverTimestamp(),
+        'text': text,
+        'isRead': false,
+        'userId': senderId,
+      });
     } catch (e) {
       throw UnableToSendMessage(
         message:

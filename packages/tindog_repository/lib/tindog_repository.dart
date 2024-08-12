@@ -3,9 +3,8 @@ import 'dart:io';
 
 import 'package:auth_repository/auth_repository.dart';
 import 'package:core/core.dart';
-import 'package:tindog_data_source/dto/dog/dog_dto.dart';
-import 'package:tindog_data_source/exceptions/exceptions.dart';
 import 'package:tindog_data_source/tindog_data_source.dart';
+import 'package:tindog_repository/extensions/chat_extension.dart';
 import 'package:tindog_repository/extensions/dog_extension.dart';
 
 class TindogRepository {
@@ -19,6 +18,7 @@ class TindogRepository {
   final AuthRepository _authRepository;
 
   Stream<List<Dog>?> _dogs = Stream.empty();
+  Stream<List<Chat>?> _chats = Stream.empty();
   Stream<Dog?> _myDog = Stream.empty();
   late Future<Dog?> myDogSync;
 
@@ -66,21 +66,7 @@ class TindogRepository {
     required Dog dog,
   }) async {
     try {
-      final user = await _authRepository.currentUserId;
-      final dto = DogDto(
-        id: dog.id,
-        name: dog.name,
-        breed: dog.breed,
-        gender: dog.gender.toString(),
-        age: '${dog.age.value} ${dog.age.unit}',
-        size: dog.size.toString(),
-        filePath: dog.imagePath,
-        isNeutered: dog.isNeutered,
-        interests: dog.interests,
-        description: dog.description,
-        userId: user!,
-      );
-      await _dataSource.createDog(dog: dto);
+      await _dataSource.createDog(dog: dog.dto);
       return CreateDogProfileSuccess();
     } on CreateDogException catch (_) {
       return CreateDogProfileError(
@@ -149,8 +135,26 @@ class TindogRepository {
     }
   }
 
-  Future<List<Chat>> fetchChats() async {
-    // TODO(3ettilina): Call data source
-    throw UnimplementedError();
+  Future<void> fetchChats() async {
+    try {
+      final userId = await _authRepository.currentUserId;
+      if (userId != null) {
+        _chats = _dataSource.fetchChats(userId: userId).map((stream) {
+          final chats = stream.map((chatDto) => chatDto.toChat(userId: userId)).toList();
+          return chats;
+        });
+      }
+    } catch (e) {
+      _chats = Stream.value(null);
+    }
+  }
+
+  Stream<FetchChatsResponse> get chats {
+    return _chats.map((list) {
+      if (list == null) {
+        return FetchChatsError('Something went wrong while fetching dogs');
+      }
+      return FetchChatsSuccess(list);
+    });
   }
 }

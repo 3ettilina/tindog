@@ -21,7 +21,7 @@ enum AgeUnit {
 
 class Age extends Equatable {
   const Age({
-    this.value = 0,
+    required this.value,
     required this.unit,
   });
 
@@ -29,17 +29,7 @@ class Age extends Equatable {
 
   const Age.years({required this.value}) : unit = AgeUnit.years;
 
-  factory Age.fromString(String age) {
-    final ageList = age.split(' ');
-    final value = int.tryParse(ageList.first);
-    final unit = ageList.last;
-    return Age(
-      value: value,
-      unit: AgeUnit.fromString(unit),
-    );
-  }
-
-  final int? value;
+  final int value;
   final AgeUnit unit;
 
   Age copyWith({

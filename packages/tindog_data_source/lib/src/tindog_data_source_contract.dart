@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:tindog_data_source/dto/dto.dart';
+import 'package:tindog_data_source/src/dto/dto.dart';
 
 abstract class TindogDataSource {
   /// Creates a new [Dog] on the database and uploads it's image
