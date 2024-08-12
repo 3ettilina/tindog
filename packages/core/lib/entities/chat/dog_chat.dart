@@ -14,5 +14,10 @@ class DogChat extends Equatable {
   final String userId;
 
   @override
-  List<Object?> get props => [dogId, name, thumbnailUrl, userId];
+  List<Object?> get props => [
+        dogId,
+        name,
+        thumbnailUrl,
+        userId,
+      ];
 }

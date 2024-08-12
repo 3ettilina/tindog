@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tindog/app/routes/main_routes.dart';
 import 'package:tindog/auth/bloc/auth_bloc.dart';
 import 'package:tindog/chats/bloc/chats_bloc.dart';
+import 'package:tindog/chats/details/state/chat_details_bloc.dart';
 import 'package:tindog/discover/bloc/discover_bloc.dart';
 import 'package:tindog/discover/dogs_swiper/cubit/dog_swiper_cubit.dart';
 import 'package:tindog/firebase_options.dart';
@@ -20,6 +24,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FlutterError.onError = (details) {
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
 
   runApp(const TinDogApp());
 }
@@ -67,9 +75,8 @@ class MainProviders extends StatelessWidget {
           BlocProvider(
             create: (_) => DogSwiperCubit(tindogRepository: tindogRepo),
           ),
-          BlocProvider(
-            create: (_) => ChatsBloc(repo: tindogRepo),
-          )
+          BlocProvider(create: (_) => ChatsBloc(repo: tindogRepo)),
+          BlocProvider(create: (_) => ChatDetailsBloc(repo: tindogRepo)),
         ],
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

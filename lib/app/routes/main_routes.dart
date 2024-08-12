@@ -81,17 +81,19 @@ final routes = GoRouter(
               path: '/chats',
               name: 'chats',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: ChatsPage(
-                  label: 'Chats',
-                  chatDetailsPath: '/chats/chatDetails',
-                ),
+                child: ChatsPage(label: 'Chats'),
               ),
               routes: [
                 GoRoute(
-                  path: 'chatDetails',
-                  builder: (context, state) =>
-                      const ChatDetailsPage(label: 'Chat Details'),
-                ),
+                    name: 'ChatDetails',
+                    path: 'details/:id',
+                    builder: (context, state) {
+                      final id = state.pathParameters['id'];
+                      return ChatDetailsPage(
+                        label: 'Chat Details',
+                        chatId: id!,
+                      );
+                    }),
               ],
             ),
           ],

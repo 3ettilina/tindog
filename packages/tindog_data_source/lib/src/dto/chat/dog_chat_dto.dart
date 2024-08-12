@@ -9,7 +9,6 @@ class DogChatDto extends Equatable {
     required this.dogId,
     required this.userId,
     required this.name,
-    required this.thumbnailUrl,
   });
 
   factory DogChatDto.fromJson(Map<String, dynamic> json) =>
@@ -20,7 +19,14 @@ class DogChatDto extends Equatable {
   final String dogId;
   final String userId;
   final String name;
-  final String thumbnailUrl;
+
+  String get thumbnailUrl {
+    final baseUrl =
+        'https://storage.googleapis.com/tindog-4edd4.appspot.com/dogs%2Fthumbnails%2F';
+    final thumbUrl = '$baseUrl${dogId}_200x200.jpeg';
+    print('---- THUMBNAIL URL: $thumbUrl');
+    return thumbUrl;
+  }
 
   @override
   List<Object?> get props => [dogId, userId, name, thumbnailUrl];

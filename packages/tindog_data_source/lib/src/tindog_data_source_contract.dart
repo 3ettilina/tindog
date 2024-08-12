@@ -79,10 +79,14 @@ abstract class TindogDataSource {
     required String likedDogId,
   });
 
-  /// chats collection fetch by the ID of the User
-  /// owner of the dog
+  /// All chats that belong to the current [userId]
   Stream<List<ChatDto>> fetchChats({
     required String userId,
+  });
+
+  /// Returns a single chat stream given the [chatId]
+  Stream<ChatDto> fetchChat({
+    required String chatId,
   });
 
   /// Sends a message into a specified chat.

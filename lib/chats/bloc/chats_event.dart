@@ -13,3 +13,9 @@ class ChatsFetched extends ChatsEvent {
 
   final FetchChatsResponse response;
 }
+
+class SelectChat extends ChatsEvent {
+  const SelectChat({required this.selectedChat});
+
+  final Chat selectedChat;
+}

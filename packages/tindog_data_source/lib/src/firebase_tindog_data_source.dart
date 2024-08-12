@@ -29,8 +29,14 @@ class FirebaseTindogDataSource implements TindogDataSource {
                 ),
         _chatsCollection = chatsCollection ??
             FirebaseFirestore.instance.collection('chats').withConverter(
-                  fromFirestore: (docSnapshot, _) =>
-                      ChatDto.fromJson(docSnapshot.data()!),
+                  fromFirestore: (docSnapshot, _) {
+                    final chatJson = docSnapshot.data()!;
+                    chatJson.addAll({
+                      'id': docSnapshot.id,
+                    });
+                    print(chatJson);
+                    return ChatDto.fromJson(docSnapshot.data()!);
+                  },
                   toFirestore: (chatDto, _) => chatDto.toJson(),
                 ),
         _storage = storage ?? FirebaseStorage.instance,
@@ -173,7 +179,9 @@ class FirebaseTindogDataSource implements TindogDataSource {
           .orderBy('updatedAt')
           .snapshots()
           .map((snap) {
-        return snap.docs.map((doc) => doc.data()).toList();
+        return snap.docs.map((doc) {
+          return doc.data();
+        }).toList();
       });
     } catch (e) {
       throw UnableToFetchChatsException(message: e.toString());
@@ -232,7 +240,7 @@ class FirebaseTindogDataSource implements TindogDataSource {
   }) async {
     try {
       final chatRef = _chatsCollection.doc(chatId);
-    
+
       chatRef.collection('messages').add({
         'timestamp': FieldValue.serverTimestamp(),
         'text': text,
@@ -270,4 +278,15 @@ class FirebaseTindogDataSource implements TindogDataSource {
 
   @override
   Stream<DogDto?> get myDog => _myDog;
+
+  @override
+  Stream<ChatDto> fetchChat({required String chatId}) {
+    try {
+      return _chatsCollection.doc(chatId).snapshots().map((snap) {
+        return snap.data()!;
+      });
+    } catch (e) {
+      throw UnableToFetchChatException(message: e.toString());
+    }
+  }
 }

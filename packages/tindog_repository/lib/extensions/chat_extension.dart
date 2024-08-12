@@ -5,6 +5,7 @@ extension ChatDtoX on ChatDto {
   Chat toChat({required String userId}) {
     final otherDogDto = dogs.firstWhere((dog) => dog.userId != userId);
     return Chat(
+      id: id,
       otherDog: otherDogDto.dogChat,
       userIds: userIds,
       updatedAt: updatedAt,

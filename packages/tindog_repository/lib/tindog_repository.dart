@@ -19,6 +19,7 @@ class TindogRepository {
 
   Stream<List<Dog>?> _dogs = Stream.empty();
   Stream<List<Chat>?> _chats = Stream.empty();
+  Stream<Chat?> _chat = Stream.empty();
   Stream<Dog?> _myDog = Stream.empty();
   late Future<Dog?> myDogSync;
 
@@ -140,7 +141,8 @@ class TindogRepository {
       final userId = await _authRepository.currentUserId;
       if (userId != null) {
         _chats = _dataSource.fetchChats(userId: userId).map((stream) {
-          final chats = stream.map((chatDto) => chatDto.toChat(userId: userId)).toList();
+          final chats =
+              stream.map((chatDto) => chatDto.toChat(userId: userId)).toList();
           return chats;
         });
       }
@@ -155,6 +157,26 @@ class TindogRepository {
         return FetchChatsError('Something went wrong while fetching dogs');
       }
       return FetchChatsSuccess(list);
+    });
+  }
+
+  Future<void> fetchSingleChat({required String chatId}) async {
+    try {
+      final userId = await _authRepository.currentUserId;
+      _chat = _dataSource.fetchChat(chatId: chatId).map((stream) {
+        return stream.toChat(userId: userId!);
+      });
+    } catch (e) {
+      _chats = Stream.value(null);
+    }
+  }
+
+  Stream<SingleChatResponse> get chat {
+    return _chat.map((chat) {
+      if (chat == null) {
+        return SingleChatError('Something went wrong while fetching dogs');
+      }
+      return SingleChatSuccess(chat);
     });
   }
 }

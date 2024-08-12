@@ -7,11 +7,7 @@ part of 'chat_dto.dart';
 // **************************************************************************
 
 ChatDto _$ChatDtoFromJson(Map<String, dynamic> json) => ChatDto(
-      messages: (json['messages'] as List<dynamic>?)
-              ?.map(
-                  (e) => UserMessageChatDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <UserMessageChatDto>[],
+      id: json['id'] as String,
       dogs: (json['dogs'] as List<dynamic>)
           .map((e) => DogChatDto.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -25,9 +21,15 @@ ChatDto _$ChatDtoFromJson(Map<String, dynamic> json) => ChatDto(
           (json['userIds'] as List<dynamic>).map((e) => e as String).toList(),
       updatedAt:
           const TimestampConverter().fromJson(json['updatedAt'] as Timestamp),
+      messages: (json['messages'] as List<dynamic>?)
+              ?.map(
+                  (e) => UserMessageChatDto.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <UserMessageChatDto>[],
     );
 
 Map<String, dynamic> _$ChatDtoToJson(ChatDto instance) => <String, dynamic>{
+      'id': instance.id,
       'messages': instance.messages.map((e) => e.toJson()).toList(),
       'dogs': instance.dogs.map((e) => e.toJson()).toList(),
       'initialMessage': instance.initialMessage.toJson(),

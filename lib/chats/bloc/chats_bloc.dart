@@ -14,6 +14,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         super(const ChatsLoading()) {
     on<FetchChats>(_onFetchChats);
     on<ChatsFetched>(_onChatsFetched);
+    on<SelectChat>(_onChatSelected);
   }
 
   final TindogRepository _repository;
@@ -25,9 +26,10 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
 
     _chatsSubscription?.cancel();
     _chatsSubscription = _repository.chats.listen(
-      (response) => add(ChatsFetched(response: response)),
-      onError: (e) => add(const ChatsFetched(response: FetchChatsError('Something went wrong while fetching chats')))
-    );
+        (response) => add(ChatsFetched(response: response)),
+        onError: (e) => add(const ChatsFetched(
+            response:
+                FetchChatsError('Something went wrong while fetching chats'))));
   }
 
   void _onChatsFetched(
@@ -41,6 +43,13 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       case FetchChatsError():
         emit(ChatsError(response.message));
     }
+  }
+
+  void _onChatSelected(
+    SelectChat event,
+    Emitter<ChatsState> emit,
+  ) {
+    emit(ChatSelected(event.selectedChat));
   }
 
   @override

@@ -10,12 +10,13 @@ part 'chat_dto.g.dart';
 @TimestampConverter()
 class ChatDto extends Equatable {
   const ChatDto({
-    this.messages = const <UserMessageChatDto>[],
+    required this.id,
     required this.dogs,
     required this.initialMessage,
     required this.lastMessage,
     required this.userIds,
     required this.updatedAt,
+    this.messages = const <UserMessageChatDto>[],
   });
 
   factory ChatDto.fromJson(Map<String, dynamic> json) =>
@@ -23,6 +24,7 @@ class ChatDto extends Equatable {
 
   Map<String, dynamic> toJson() => _$ChatDtoToJson(this);
 
+  final String id;
   final List<UserMessageChatDto> messages;
   final List<DogChatDto> dogs;
   final InitialMessageChatDto initialMessage;
@@ -32,6 +34,7 @@ class ChatDto extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         messages,
         dogs,
         initialMessage,

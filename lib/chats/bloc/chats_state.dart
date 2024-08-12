@@ -27,3 +27,9 @@ class ChatsError extends ChatsState {
 
   final String message;
 }
+
+class ChatSelected extends ChatsState {
+  const ChatSelected(this.selectedChat);
+
+  final Chat selectedChat;
+}

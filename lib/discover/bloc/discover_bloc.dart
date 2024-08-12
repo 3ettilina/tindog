@@ -31,13 +31,13 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
 
     _dogsSubscription?.cancel();
     _dogsSubscription = _repository.dogs.listen(
-      (response) => add(DogsFetched(response: response)),
-      onError: (e) => emit(
-        const DiscoverErrorFetchingDogsState(
-          'Something went wrong while fetching dogs',
-        ),
-      ),
-    );
+        (response) => add(DogsFetched(response: response)),
+        onError: (e) => add(
+              const DogsFetched(
+                response:
+                    FetchDogsError('Something went wrong while fetching dogs'),
+              ),
+            ));
   }
 
   void _onDogsFetched(
